@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>ArdOS An OS for Arduino</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+
+    <!-- Optional theme -->
+    <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css"/> -->
+    
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/flatly.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/mediaicons.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/pygment.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/typogrify.css"/>
+    <style type="text/css" media="screen">
+	.err {
+		/** remove irritating red border from pygment code **/
+		border: none;
+	}
+    </style>
+    
+        <link href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="@fibasile Atom Feed" />
+        
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+   
+  </head>
+
+  <body>
+    <div class="container">
+        
+         <div class="row" >
+
+                <div class="col-xs-12 col-md-12">
+                     <div class="navbar navbar-inverse" role="navigation">
+                         <div class="container">
+                         <div class="navbard-header">
+                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                                         <span class="sr-only">Toggle navigation</span>
+                                         <span class="icon-bar"></span>
+                                         <span class="icon-bar"></span>
+                                         <span class="icon-bar"></span>
+                                       </button>
+                                  <a class="navbar-brand" href="http://fibasile.github.io/">@fibasile </a>
+                         </div>
+                           <div class="collapse navbar-collapse navbar-ex1-collapse">
+                              <ul class="nav navbar-nav">
+                                                                                                                <li><a href="http://fibasile.github.io/pages/about.html">About me</a></li>
+                                                                            <li><a href="http://fibasile.github.io/pages/projects.html">Projects</a></li>
+                                                                                                                                            </ul>
+                            </div>
+                            </div>
+                        </div>
+                </div>
+        </div>
+
+        <div class="row" >
+
+            <div class="col-xs-12 col-md-9">
+                    
+                                                   
+                        
+
+
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="http://fibasile.github.io/ardos-operating-system.html" rel="bookmark"
+           title="Permalink to ArdOS An OS for Arduino">ArdOS An OS for Arduino</a></h1>
+      <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+      <footer class="post-info">
+
+<p>        <abbr class="published" title="2013-08-28T10:20:00">
+                Wed 28 August 2013
+        </abbr>
+
+        <!--               <address class="vcard author">
+                      By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
+              </address>
+               -->
+| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
+        <a href="http://fibasile.github.io/tag/arduino.html">
+        <span class="label label-default">arduino</span>
+        </a>
+        <a href="http://fibasile.github.io/tag/ardos.html">
+        <span class="label label-default">ardos</span>
+        </a>
+         </p>
+
+
+</footer><!-- /.post-info -->      <p>Arduino has a great software platform, lots of libraries and so on. But if you need to program something more complex
+than a single routine, it could bring some sincere headache synchronizing all the bits of code you might need.</p>
+<p>Then I found ArdOS, here's a quote from their <a href="https://bitbucket.org/ctank/ardos-ide/wiki/Home">website</a>: </p>
+<blockquote>
+<p>ArdOS is a powerful multitasking operating system for the Arduino series of microcontroller boards centered around the Atmel ATmega 168, 328, 1280 and 2560 microcontrollers. </p>
+</blockquote>
+<p>ArdOS lets you define tasks for which get executed in multi-tasking fashion, providing a true <code>sleep</code> function which lets
+the currently running task to be suspended and resumed after a given interval, much different from the <code>delay</code> provided
+by the standard Arduino library. </p>
+<h2>Getting started with ArdOS</h2>
+<p>First install the ArdOS library in the usual Arduino library location. Restart the IDE.</p>
+<p>My first try at ArdOS didnt' go very far, as I was using and Arduino Leonardo <a href="#leonardo">see section below</a>, luckily I have a few Arduino's around so I quickly moved to my trusted old Duemilanove board, where I started coding a basic sketch:</p>
+<div class="highlight"><pre><span class="cp">#include &quot;kernel.h&quot;</span>
+<span class="cp">#define NUM_TASKS 2 </span><span class="c1">// we must know in advance how many</span>
+
+<span class="cm">/* simple sleep forever task */</span>
+<span class="kt">void</span> <span class="nf">task1</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">p</span><span class="p">){</span>
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">OSSleep</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cm">/* simple sleep forever task */</span>
+<span class="kt">void</span> <span class="nf">task2</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">p</span><span class="p">){</span>
+    <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">OSSleep</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="cm">/* regular Arduino setup */</span>
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">OSInit</span><span class="p">(</span><span class="n">NUM_TASKS</span><span class="p">);</span>
+  <span class="c1">// Create the tasks</span>
+  <span class="n">OSCreateTask</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">task1</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="n">OSCreateTask</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">task2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="c1">// Start the scheduler  </span>
+  <span class="n">OSRun</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="cm">/* mandatory Arduino loop */</span> 
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">// Nothing</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>The sketch doesn't do much, but you can immediately notice few things:</p>
+<ul>
+<li>both <code>task()</code> functions loop forever, one sleeping every 50ms, the other every 500ms </li>
+<li>the <code>loop()</code> body is empty, but required for compiling</li>
+<li>creating multi tasking apps is damn easy</li>
+</ul>
+<p>Now let's say we want to blink a led connected at LED_PIN on a fixed rate, while echoing the serial.
+So let's add a definition for it and change the task1, task2 and setup functions:</p>
+<div class="highlight"><pre>    <span class="err">#</span><span class="n">define</span> <span class="n">LED_PIN</span><span class="o">=</span><span class="mi">6</span>
+
+    <span class="kt">void</span> <span class="n">task1</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">interval</span><span class="p">){</span>
+        <span class="kt">int</span> <span class="n">pause</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">*</span><span class="n">interval</span><span class="p">;</span>
+        <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+            <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LED_PIN</span><span class="p">,</span> <span class="n">HIGH</span><span class="p">);</span>
+            <span class="n">OSSleep</span><span class="p">(</span><span class="n">pause</span><span class="p">);</span>
+            <span class="n">digitalWrite</span><span class="p">(</span><span class="n">LED_PIN</span><span class="p">,</span> <span class="n">LOW</span><span class="p">)</span>
+            <span class="n">OSSleep</span><span class="p">(</span><span class="n">pause</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">task2</span><span class="p">(){</span>
+        <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+            <span class="k">while</span><span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">available</span><span class="p">()){</span>
+                <span class="n">Serial</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="n">OSSleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">setup</span><span class="p">()</span>
+    <span class="p">{</span>
+      <span class="n">OSInit</span><span class="p">(</span><span class="n">NUM_TASKS</span><span class="p">);</span>
+      <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">57600</span><span class="p">);</span>
+      <span class="n">pinMode</span><span class="p">(</span><span class="n">LED_PIN</span><span class="p">,</span><span class="n">OUTPUT</span><span class="p">);</span>
+      <span class="c1">// Create the tasks</span>
+      <span class="n">OSCreateTask</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">task1</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span> <span class="mi">100</span><span class="p">);</span>
+      <span class="n">OSCreateTask</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">task2</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+      <span class="c1">// Start the scheduler  </span>
+      <span class="n">OSRun</span><span class="p">();</span>
+    <span class="p">}</span>
+</pre></div>
+
+
+<p>As you can see we can deal with as many concurrent tasks we need, having them share independetly the MCU. The immediate benefit is that code is much cleaner this way.</p>
+<p>Furthermore, the first parameter of <code>OSCreateTask</code> is the <em>priority</em> of each task. In our example that would mean that Task 2
+would be awaken from sleep only if Task 1 has given up execution using OSSleep itself, thus guaranteeing a more precise timing.</p>
+<p>If you have many tasks this also gives you the possibility to choose which one are more important and which could be delayed a bit without any problem.</p>
+<p>But the library offers much more functionality:</p>
+<ul>
+<li>Semaphores: both binary and counter, allow checking when some fixed resource is over.</li>
+<li>Queues: allow to transfer data between tasks in a synchronized and respecting priority. </li>
+<li>Mutexes: allow to grant exclusive access to a resource to one task at a time.</li>
+</ul>
+<p>I plan to discuss in more detail all of these components and provide more advanced examples in further posts.</p>
+<h2>Note: Doesn't work on Arduino Leonardo  <a name="leonardo"></a></h2>
+<p>As mentioned in the project description, the OS is designed around Atmel ATmega 168, 328, 1280 and 2560, so if you have an Arduino Leonardo, using ATmega 32u4 you cannot use it. </p>
+<p>Here's what you get compiling the sources:</p>
+<div class="highlight"><pre><span class="err">/Users/fiore/Documents/Arduino/libraries/ArdOS/kernel.cpp: In function &#39;void configureTimer()&#39;:</span>
+<span class="o">/</span><span class="nx">Users</span><span class="o">/</span><span class="nx">fiore</span><span class="o">/</span><span class="nx">Documents</span><span class="o">/</span><span class="nx">Arduino</span><span class="o">/</span><span class="nx">libraries</span><span class="o">/</span><span class="nx">ArdOS</span><span class="o">/</span><span class="nx">kernel</span><span class="p">.</span><span class="nx">cpp</span><span class="o">:</span><span class="mi">471</span><span class="o">:</span> <span class="nx">error</span><span class="o">:</span> <span class="s1">&#39;TCCR2A&#39;</span> <span class="nx">was</span> <span class="nx">not</span> <span class="nx">declared</span> <span class="k">in</span> <span class="k">this</span> <span class="nx">scope</span>
+<span class="o">/</span><span class="nx">Users</span><span class="o">/</span><span class="nx">fiore</span><span class="o">/</span><span class="nx">Documents</span><span class="o">/</span><span class="nx">Arduino</span><span class="o">/</span><span class="nx">libraries</span><span class="o">/</span><span class="nx">ArdOS</span><span class="o">/</span><span class="nx">kernel</span><span class="p">.</span><span class="nx">cpp</span><span class="o">:</span><span class="mi">472</span><span class="o">:</span> <span class="nx">error</span><span class="o">:</span> <span class="s1">&#39;TCNT2&#39;</span> <span class="nx">was</span> <span class="nx">not</span> <span class="nx">declared</span> <span class="k">in</span> <span class="k">this</span> <span class="nx">scope</span>
+<span class="o">/</span><span class="nx">Users</span><span class="o">/</span><span class="nx">fiore</span><span class="o">/</span><span class="nx">Documents</span><span class="o">/</span><span class="nx">Arduino</span><span class="o">/</span><span class="nx">libraries</span><span class="o">/</span><span class="nx">ArdOS</span><span class="o">/</span><span class="nx">kernel</span><span class="p">.</span><span class="nx">cpp</span><span class="o">:</span> <span class="nx">In</span> <span class="kd">function</span> <span class="s1">&#39;void startTimer()&#39;</span><span class="o">:</span>
+<span class="err">/Users/fiore/Documents/Arduino/libraries/ArdOS/kernel.cpp:482: error: &#39;TCCR2B&#39; was not declared in this scope</span>
+</pre></div>
+
+
+<p>I found out that some timer registers have changed and currently investigating a possible solution to port it. For example
+this <a href="http://sourceforge.net/p/qpc/discussion/668726/thread/2378ff48/">post</a> tells to rename the registers in order to make
+use of timer no. 4 instead of no. 2.</p>
+    </div><!-- /.entry-content -->
+    
+  </article>
+</section>
+                   
+        
+            </div>
+            
+            <div class="col-xs-12 col-md-3" style="padding-top: 50px">
+                 
+     
+        <div id="" class="panel panel-default">
+            <div class="panel-body">
+            <strong>Fiore Basile</strong>
+            <p><small>programmer, creative, entrepreneur based in Pisa, Italy
+            <a href="/pages/about.html">More...</a></small></p>
+            </div>
+        </div>
+     
+
+                                <ul class="list-group">
+                            <li class="list-group-item"><strong>Blogroll</strong></li>
+                                                    <li class="list-group-item"><a href="http://fablabstarter.com/">FabLab Starter</a></li>
+                                                    <li class="list-group-item"><a href="http://www.artigianatodigitale.com">Artigianato Digitale</a></li>
+                                                </ul>
+
+        
+
+                        <div class="social">
+
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Social</strong></li>
+                            <li class="list-group-item"><a href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            
+                                                    <li class="list-group-item"><a href="https://twitter.com/fibasile">Twitter</a></li>
+                                                    <li class="list-group-item"><a href="https://github.com/fibasile">GitHub</a></li>
+                                                    <li class="list-group-item"><a href="http://www.linkedin.com/in/fibasile">LinkedIn</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                
+        
+        <div class="tags">
+            <ul  class="list-group">
+                  <li class="list-group-item"><strong>Tags</strong></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/arduino.html">arduino</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/publishing.html">publishing</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/dropbox.html">dropbox</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/python.html">python</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/pelican.html">pelican</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ardos.html">ardos</a></li>
+                            </ul>
+            
+            
+        </div>
+            </div>
+        </div>
+        
+        <footer class="navbar navbar-default  navbar-bottom">
+            <div class="container">
+                <div class="navbar-text"><small>
+            &copy; 2013 Fiore Basile - Powered by <a href="http://getpelican.com" class="navbar-link">Pelican</a> - Custom theme built in <a href="http://getbootstrap.com" class="navbar-link">Bootstrap</a></small>
+            </div>
+            </div>
+        </footer>
+        
+        
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+     <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+       <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+       
+         </body>
+</html>

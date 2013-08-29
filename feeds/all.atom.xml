@@ -1,4 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/all.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-08-26T10:20:00+02:00</updated><entry><title>Blog moved to Pelican</title><link href="http://fibasile.github.io/blog-moved-to-pelican.html" rel="alternate"></link><updated>2013-08-26T10:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-08-26:blog-moved-to-pelican.html</id><summary type="html">&lt;p&gt;Since early 90s, I've been a Python language enthusiast. I started loving the language and used it through the years for most of my professional projects, and it never disappointed me.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/all.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-08-29T15:26:00+02:00</updated><entry><title>Dropbox and Python Virtualenv</title><link href="http://fibasile.github.io/dropbox-virtualenv.html" rel="alternate"></link><updated>2013-08-29T15:26:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-08-29:dropbox-virtualenv.html</id><summary type="html">&lt;p&gt;Since most of my systems are 64 bits macs, and I was using Python's excellent virtualenv system, I though it was possibly to just copy over the virtualenvs inside my project folders. &lt;/p&gt;
+&lt;p&gt;Fact is that after a while, Dropbox will get stuck in changing some system's file permission, and it wont' sync anymore. As I found out, the only solution is to move your virtual envs out of the Dropbox folder.
+I hope to save you some time with this tip.&lt;/p&gt;
+&lt;p&gt;If you don't know it, Virtualenv basically links your system's python library and interpreter in a folder you specify, letting you use pip to install locally any module you need without polluting the system's paths.&lt;/p&gt;
+&lt;p&gt;But Dropbox doesn't like those symlinks, especially when they link system folders. &lt;/p&gt;
+&lt;p&gt;Quick fix: If you use virtualenv you should create your envs in a folder not synched by dropbox, i.e. something like ~/.virtualenvs/ i.e.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;virtualenv&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;virtualenvs&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;myproject&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;When you are done installing all the modules using pip you can generate a &lt;code&gt;requirements.txt&lt;/code&gt; file using&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;freeze&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;requirements&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;txt&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then when you are on another machine re-create the virtualenv using the first command and reinstall every module using &lt;code&gt;pip install -r requirements.txt&lt;/code&gt;. Remember to activate your newly created virtualenv first.&lt;/p&gt;</summary><category term="python"></category><category term="dropbox"></category></entry><entry><title>ArdOS An OS for Arduino</title><link href="http://fibasile.github.io/ardos-operating-system.html" rel="alternate"></link><updated>2013-08-28T10:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-08-28:ardos-operating-system.html</id><summary type="html">&lt;p&gt;Arduino has a great software platform, lots of libraries and so on. But if you need to program something more complex
+than a single routine, it could bring some sincere headache synchronizing all the bits of code you might need.&lt;/p&gt;
+&lt;p&gt;Then I found ArdOS, here's a quote from their &lt;a href="https://bitbucket.org/ctank/ardos-ide/wiki/Home"&gt;website&lt;/a&gt;: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ArdOS is a powerful multitasking operating system for the Arduino series of microcontroller boards centered around the Atmel ATmega 168, 328, 1280 and 2560 microcontrollers. &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;ArdOS lets you define tasks for which get executed in multi-tasking fashion, providing a true &lt;code&gt;sleep&lt;/code&gt; function which lets
+the currently running task to be suspended and resumed after a given interval, much different from the &lt;code&gt;delay&lt;/code&gt; provided
+by the standard Arduino library. &lt;/p&gt;
+&lt;h2&gt;Getting started with ArdOS&lt;/h2&gt;
+&lt;p&gt;First install the ArdOS library in the usual Arduino library location. Restart the IDE.&lt;/p&gt;
+&lt;p&gt;My first try at ArdOS didnt' go very far, as I was using and Arduino Leonardo &lt;a href="#leonardo"&gt;see section below&lt;/a&gt;, luckily I have a few Arduino's around so I quickly moved to my trusted old Duemilanove board, where I started coding a basic sketch:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;quot;kernel.h&amp;quot;&lt;/span&gt;
+&lt;span class="cp"&gt;#define NUM_TASKS 2 &lt;/span&gt;&lt;span class="c1"&gt;// we must know in advance how many&lt;/span&gt;
+
+&lt;span class="cm"&gt;/* simple sleep forever task */&lt;/span&gt;
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;task1&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="n"&gt;OSSleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;500&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="cm"&gt;/* simple sleep forever task */&lt;/span&gt;
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;task2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="n"&gt;OSSleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="cm"&gt;/* regular Arduino setup */&lt;/span&gt;
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;OSInit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NUM_TASKS&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Create the tasks&lt;/span&gt;
+  &lt;span class="n"&gt;OSCreateTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;task1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="n"&gt;OSCreateTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;task2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Start the scheduler  &lt;/span&gt;
+  &lt;span class="n"&gt;OSRun&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="cm"&gt;/* mandatory Arduino loop */&lt;/span&gt; 
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="c1"&gt;// Nothing&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The sketch doesn't do much, but you can immediately notice few things:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;both &lt;code&gt;task()&lt;/code&gt; functions loop forever, one sleeping every 50ms, the other every 500ms &lt;/li&gt;
+&lt;li&gt;the &lt;code&gt;loop()&lt;/code&gt; body is empty, but required for compiling&lt;/li&gt;
+&lt;li&gt;creating multi tasking apps is damn easy&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now let's say we want to blink a led connected at LED_PIN on a fixed rate, while echoing the serial.
+So let's add a definition for it and change the task1, task2 and setup functions:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="n"&gt;define&lt;/span&gt; &lt;span class="n"&gt;LED_PIN&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;
+
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;task1&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;interval&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;pause&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;interval&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="n"&gt;digitalWrite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LED_PIN&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;HIGH&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="n"&gt;OSSleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pause&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+            &lt;span class="n"&gt;digitalWrite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LED_PIN&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;LOW&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="n"&gt;OSSleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pause&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;task2&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+        &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Serial&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt;&lt;span class="p"&gt;()){&lt;/span&gt;
+                &lt;span class="n"&gt;Serial&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Serial&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+            &lt;span class="n"&gt;OSSleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="n"&gt;OSInit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NUM_TASKS&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="n"&gt;Serial&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;57600&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="n"&gt;pinMode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LED_PIN&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;OUTPUT&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="c1"&gt;// Create the tasks&lt;/span&gt;
+      &lt;span class="n"&gt;OSCreateTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;task1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="n"&gt;OSCreateTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;task2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="c1"&gt;// Start the scheduler  &lt;/span&gt;
+      &lt;span class="n"&gt;OSRun&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As you can see we can deal with as many concurrent tasks we need, having them share independetly the MCU. The immediate benefit is that code is much cleaner this way.&lt;/p&gt;
+&lt;p&gt;Furthermore, the first parameter of &lt;code&gt;OSCreateTask&lt;/code&gt; is the &lt;em&gt;priority&lt;/em&gt; of each task. In our example that would mean that Task 2
+would be awaken from sleep only if Task 1 has given up execution using OSSleep itself, thus guaranteeing a more precise timing.&lt;/p&gt;
+&lt;p&gt;If you have many tasks this also gives you the possibility to choose which one are more important and which could be delayed a bit without any problem.&lt;/p&gt;
+&lt;p&gt;But the library offers much more functionality:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Semaphores: both binary and counter, allow checking when some fixed resource is over.&lt;/li&gt;
+&lt;li&gt;Queues: allow to transfer data between tasks in a synchronized and respecting priority. &lt;/li&gt;
+&lt;li&gt;Mutexes: allow to grant exclusive access to a resource to one task at a time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I plan to discuss in more detail all of these components and provide more advanced examples in further posts.&lt;/p&gt;
+&lt;h2&gt;Note: Doesn't work on Arduino Leonardo  &lt;a name="leonardo"&gt;&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;As mentioned in the project description, the OS is designed around Atmel ATmega 168, 328, 1280 and 2560, so if you have an Arduino Leonardo, using ATmega 32u4 you cannot use it. &lt;/p&gt;
+&lt;p&gt;Here's what you get compiling the sources:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="err"&gt;/Users/fiore/Documents/Arduino/libraries/ArdOS/kernel.cpp: In function &amp;#39;void configureTimer()&amp;#39;:&lt;/span&gt;
+&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;fiore&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Documents&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Arduino&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;libraries&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;ArdOS&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;kernel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;cpp&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;471&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;TCCR2A&amp;#39;&lt;/span&gt; &lt;span class="nx"&gt;was&lt;/span&gt; &lt;span class="nx"&gt;not&lt;/span&gt; &lt;span class="nx"&gt;declared&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt; &lt;span class="nx"&gt;scope&lt;/span&gt;
+&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;fiore&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Documents&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Arduino&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;libraries&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;ArdOS&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;kernel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;cpp&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;472&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;error&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;TCNT2&amp;#39;&lt;/span&gt; &lt;span class="nx"&gt;was&lt;/span&gt; &lt;span class="nx"&gt;not&lt;/span&gt; &lt;span class="nx"&gt;declared&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt; &lt;span class="nx"&gt;scope&lt;/span&gt;
+&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Users&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;fiore&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Documents&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;Arduino&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;libraries&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;ArdOS&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nx"&gt;kernel&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;cpp&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;In&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;void startTimer()&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+&lt;span class="err"&gt;/Users/fiore/Documents/Arduino/libraries/ArdOS/kernel.cpp:482: error: &amp;#39;TCCR2B&amp;#39; was not declared in this scope&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I found out that some timer registers have changed and currently investigating a possible solution to port it. For example
+this &lt;a href="http://sourceforge.net/p/qpc/discussion/668726/thread/2378ff48/"&gt;post&lt;/a&gt; tells to rename the registers in order to make
+use of timer no. 4 instead of no. 2.&lt;/p&gt;</summary><category term="arduino"></category><category term="ardos"></category></entry><entry><title>Blog moved to Pelican</title><link href="http://fibasile.github.io/blog-moved-to-pelican.html" rel="alternate"></link><updated>2013-08-26T10:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-08-26:blog-moved-to-pelican.html</id><summary type="html">&lt;p&gt;Since early 90s, I've been a Python language enthusiast. I started loving the language and used it through the years for most of my professional projects, and it never disappointed me.&lt;/p&gt;
 &lt;p&gt;After many years of procrastination, I recently started blogging using the very complete &lt;a href="http://octopress.org"&gt;Octopress&lt;/a&gt;, currently powering my &lt;a href="http://www.fablabstarter.com"&gt;FabLab Starter&lt;/a&gt; blog. I find it very easy to use, but for some reason I really missed the subtle efficiency of battery-included python! &lt;/p&gt;
 &lt;p&gt;For this blog I picked &lt;a href="http://getpelican.com"&gt;Pelican&lt;/a&gt;, and I must say it really feels like home. I plan to write a little about it in the upcoming days, stay tuned.&lt;/p&gt;</summary><category term="pelican"></category><category term="publishing"></category></entry></feed>
