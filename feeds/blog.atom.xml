@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/blog.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-09-04T16:20:00+02:00</updated><entry><title>QuickCanvas, a lean business canvas web app</title><link href="http://fibasile.github.io/quickcanvas-webapp.html" rel="alternate"></link><updated>2013-09-04T16:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-09-04:quickcanvas-webapp.html</id><summary type="html">&lt;p&gt;&lt;a href="http://quickcanvas.net"&gt;QuickCanvas&lt;/a&gt; is a web-based tool for building the so called Lean Business Canvas. This model is used by startuppers and entrepreneurs to quickly asses the feasibility of a business idea, by outlining all aspects of the business.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/blog.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-09-13T13:20:00+02:00</updated><entry><title>Getting Started with Arduino YUN</title><link href="http://fibasile.github.io/arduino-yun-getting-started.html" rel="alternate"></link><updated>2013-09-13T13:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-09-13:arduino-yun-getting-started.html</id><summary type="html">&lt;p&gt;I just received my &lt;a href="http://arduino.cc/en/Main/ArduinoBoardYun?from=Main.ArduinoYUN"&gt;Arduino YUN&lt;/a&gt;, a new product from &lt;a href="http://arduino.cc"&gt;Officine Arduino&lt;/a&gt; bridging the gap between microcontrollers and embedded Linux devices.&lt;/p&gt;
+&lt;p&gt;The YUN packs in the form factor both devices, also adding USB, Wifi, Ethernet connectivity.&lt;/p&gt;
+&lt;p&gt;I think many people willing to buy it could find interesting to learn how it works, and also some newbies could need some help to get started using it, so here's a quick guide of the steps to follow to get the YUN configured using a WiFi network connection: &lt;/p&gt;
+&lt;p&gt;1) plug the mini-USB port on the YUN to your computer or to a usb-compatible charger using a mini-USB cable&lt;/p&gt;
+&lt;p&gt;&lt;img alt="00 Plug" src="static/images/yun-getting-started/00-plug.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;2) go to your wifi-enabled computer, and after few seconds you should find a Arduino-YUN-XXX network you can connect to&lt;/p&gt;
+&lt;p&gt;3) Once you joined the network, fire up your web browser and visit http://arduino.local, you will be presented with the following screen&lt;/p&gt;
+&lt;p&gt;&lt;img alt="01 Login" src="static/images/yun-getting-started/01-login.png" /&gt;&lt;/p&gt;
+&lt;p&gt;4) Type the default password which is "arduino"&lt;/p&gt;
+&lt;p&gt;5) The following screen will show you the current network status, telling you if you're connected via wifi or ethernet. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="02 Welcome" src="static/images/yun-getting-started/02-welcome.png" /&gt;&lt;/p&gt;
+&lt;p&gt;6) Now hit the configure button. At this point you will be prompted with a new screen, allowing to configure your password, it should be at least 8 chars long&lt;/p&gt;
+&lt;p&gt;&lt;img alt="03 Password" src="static/images/yun-getting-started/03-password.png" /&gt;&lt;/p&gt;
+&lt;p&gt;7) Scroll down, and configure access to you existing wireless network. Choose from the selection your network name, the kind of encryption you are using (most common is WPA) and the password you usually set to access your network.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="04 Wifi" src="static/images/yun-getting-started/04-wifi.png" /&gt;&lt;/p&gt;
+&lt;p&gt;8) On the bottom of the page you are able to set a protection on access to sketches from the REST interface. If you don't know what this means, and in any case, it is safe to set this to "With password". &lt;/p&gt;
+&lt;p&gt;&lt;img alt="05 Rest" src="static/images/yun-getting-started/05-rest.png" /&gt;&lt;/p&gt;
+&lt;p&gt;9) Hit configure and restart. Now you can switch back to your existing wifi connection. If you did set your config data correctly the Arduino YUN should be again reachable using the http://arduino.local address, asking for the password you did set up at step 6).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="06 Restart" src="static/images/yun-getting-started/06-restart.png" /&gt;&lt;/p&gt;
+&lt;p&gt;10) Optional - If you plan to access your Arduino YUN using ssh, I recommend to set up private key based login instead of plain old passwords: not only it is more secure (your password might be guessed, but nobody will be able to guess your private key), but more
+practical so you don't have to type the password every time.&lt;/p&gt;
+&lt;p&gt;If you want to set it, just hit Configure on the main screen shown after inserting the password, when a new page loads, on the top of the page you will now select "advanced configuration panel", select it and you will be presented with the Administration panel:&lt;/p&gt;
+&lt;p&gt;Now select the System menu and the Administration option. You will be presented with a new form, allowing also to change the system password. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="07 Admin" src="static/images/yun-getting-started/07-admin.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Now scroll down to SSH Keys, and paste in your SSH Certificate, then hit "Save and Apply". If you don't have one you can follow &lt;a href="https://help.github.com/articles/generating-ssh-keys"&gt;this tutorial&lt;/a&gt; to generate one. At the end you should come up with something like&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rsa&lt;/span&gt; &lt;span class="n"&gt;AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;BWDSU&lt;/span&gt;
+&lt;span class="n"&gt;GPl&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3&lt;/span&gt;
+&lt;span class="n"&gt;Pbv7kOdJ&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;MTyBlWXFCR&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="n"&gt;XA&lt;/span&gt;
+&lt;span class="n"&gt;t3FaoJoAsncM1Q9x5&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="n"&gt;V0Ww68&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Pb0rwert&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;En&lt;/span&gt;
+&lt;span class="n"&gt;mZ&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;AW4OZPnTPI89ZPmVMLuayrD2cE86Z&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;il8b&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;gw3r3&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="n"&gt;nKatmIkjn2so1d01QraTlMqVSsbx&lt;/span&gt;
+&lt;span class="n"&gt;NrRFi9wrf&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;M7Q&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;schacon&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;agadorlaptop&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;that you can copy and paste in the textarea. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="08 Ssh" src="static/images/yun-getting-started/08-ssh.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Once you are done, and applied the change you can try (depending on your platform) to ssh to the YUN using&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ssh root@arduino.local&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;if the command doesn't ask you for a password, you are set up, and can move on to step 12. If it doesn't check you followed the instruction or ask for help to a friend or in a Linux forum.  &lt;/p&gt;
+&lt;p&gt;12) If your passwordless ssh worked you can now disable password-based access to the YUN. Go back to the System &amp;gt; Administration menu item, under the SSH Access header and uncheck the following checkfields&lt;/p&gt;
+&lt;p&gt;&lt;img alt="09 Ssh2" src="static/images/yun-getting-started/09-ssh2.png" /&gt;&lt;/p&gt;
+&lt;p&gt;apply your changes, and you are done.&lt;/p&gt;
+&lt;p&gt;13) Where to go from here: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;check out the &lt;a href="http://arduino.cc/en/Tutorial/Bridge"&gt;Bridge Library&lt;/a&gt; to interact with the digital and analog pins via the web interface&lt;/li&gt;
+&lt;li&gt;take a look at the &lt;a href="http://arduino.cc/en/Tutorial/HomePage"&gt;Bridge Library examples&lt;/a&gt; to learn how you can call Linux-side commands via Arduino Sketches&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I hope you found this useful, if so I'll write more tutorials on the features offered by the Administration panel. Have fun with your YUN!&lt;/p&gt;</summary><category term="projects"></category><category term="opensource"></category><category term="arduino"></category></entry><entry><title>QuickCanvas, a lean business canvas web app</title><link href="http://fibasile.github.io/quickcanvas-webapp.html" rel="alternate"></link><updated>2013-09-04T16:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-09-04:quickcanvas-webapp.html</id><summary type="html">&lt;p&gt;&lt;a href="http://quickcanvas.net"&gt;QuickCanvas&lt;/a&gt; is a web-based tool for building the so called Lean Business Canvas. This model is used by startuppers and entrepreneurs to quickly asses the feasibility of a business idea, by outlining all aspects of the business.&lt;/p&gt;
 &lt;p&gt;Some proprietary commercial tools are available, but I don't like the idea to send my business ideas over the network, and for my own use I built an AngularJS app for creating the canvas.&lt;/p&gt;
 &lt;p&gt;A cool feature is that the app works completely in the browser, but gives the ability to produce and download a PDF file containing the report.
 I used the &lt;a href="http://parall.ax/products/jspdf"&gt;JSPDF&lt;/a&gt; library for that. &lt;/p&gt;
