@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>@fibasile</title>
+    <title>Building a custom image for Arduino YUN</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
@@ -66,15 +66,20 @@
             <div class="col-xs-12 col-md-9">
                     
                                                    
-                                
+                        
 
 
-            
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="http://fibasile.github.io/arduino-yun-custom-buildroot.html" rel="bookmark"
+           title="Permalink to Building a custom image for Arduino YUN">Building a custom image for Arduino YUN</a></h1>
+      <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
 
-           
-                <article>
-                    <h1 class="entry-title"><a href="http://fibasile.github.io/arduino-yun-custom-buildroot.html">Building a custom image for Arduino YUN</a></h1> 
-                    <footer class="post-info">
+    <div class="entry-content">
+      <footer class="post-info">
 
 <p>        <abbr class="published" title="2013-09-14T10:04:00">
                 Sat 14 September 2013
@@ -100,168 +105,83 @@
          </p>
 
 
-</footer><!-- /.post-info --><p>How to setup a custom build environment for your Arduino YUN, for example to cross-compile new packages</p><p>There are <a href="http://fibasile.github.io/arduino-yun-custom-buildroot.html#disqus_thread">comments</a>.</p>                    <a class="btn btn-success" href="http://fibasile.github.io/arduino-yun-custom-buildroot.html">Read more...</a>
-                    
-                </article>
-
-                <hr/>
-            
-
-           
-                <article>
-                    <h1 class="entry-title"><a href="http://fibasile.github.io/arduino-yun-getting-started.html">Getting Started with Arduino YUN</a></h1> 
-                    <footer class="post-info">
-
-<p>        <abbr class="published" title="2013-09-13T13:20:00">
-                Fri 13 September 2013
-        </abbr>
-
-        <!--               <address class="vcard author">
-                      By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
-              </address>
-               -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-        <a href="http://fibasile.github.io/tag/projects.html">
-        <span class="label label-default">projects</span>
-        </a>
-        <a href="http://fibasile.github.io/tag/opensource.html">
-        <span class="label label-default">opensource</span>
-        </a>
-        <a href="http://fibasile.github.io/tag/arduino.html">
-        <span class="label label-default">arduino</span>
-        </a>
-         </p>
+</footer><!-- /.post-info -->      <p>As soon as I got my hands on the YUN I found the selection of packages lacks many interesting pieces of software that could
+help building interesting appliances. I think Arduino people selected those packages that would easily fit in the minimal 64MB flash. </p>
+<p>So first of all I formatted a 4GB mini-sd as ext3 and plugged it in to the mini, it was recognized as /dev/sda1, so I quickly added an /opt folder and mounted in there instead. Now I have plenty of space to add my custom packages, and some "secure" disk space just in case I have to wipe my YUN loosing all flash content.</p>
+<p>Resetting the YUN flash is done by holding the reset button for 30 seconds. Holding it for 5 just resets the WiFi config.</p>
+<p>Then I spent some time to collect all the information needed to setup our own buildroot for the YUN, here you can find
+a few tips to do it yourself. </p>
+<p>As I'm on a Mac, it is wise to use a VirtualBox machine (save you lots of headaches), with the latest Debian stable distribution.</p>
+<h2>What's a buildroot</h2>
+<p>The Arduino YUN is based on a Linux distribution called <a href="openwrt.org">OpenWRT</a>, which is mostly used to mess with wireless and network routers, liberating them from a proprietary firmware and adding many interesting features.</p>
+<p>In order to build such firmware, you need to build a cross-compiling toolchain first, a Linux kernel, and the core programs needed by any Linux systems.</p>
+<p>For making it easier OpenWRT people, did set up a Buildroot, or a set of scripts and makefiles which do just this in a confortable way, also using ipkg, a clone of Debian's dpkg to easily install packages when the system is setup. The system is based off <a href="http://www.openembedded.org/wiki/Main_Page">OpenEmbedded</a> which I was using long time ago to hack Sharp Zaurus. </p>
+<p>Arduino made a good choice to base their new Arduino YUN off OpenWRT, as it has a huge following and is quite nice build environment to work with.</p>
+<p>A nice intro on OpenWRT build root is available on this <a href="https://forum.openwrt.org/viewtopic.php?pid=31794#p31794">forum post</a>.</p>
+<h2>Getting the source</h2>
+<p>First of all you should clone the Arduino YUN buildroot sources, available from <a href="http://github.com/arduino/linino">github</a>.</p>
+<div class="highlight"><pre><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="o">:</span><span class="c1">//github.com/arduino/linino.git linino</span>
+</pre></div>
 
 
-</footer><!-- /.post-info --><p>A quick getting started guide for Arduino YUN</p><p>There are <a href="http://fibasile.github.io/arduino-yun-getting-started.html#disqus_thread">comments</a>.</p>                    <a class="btn btn-success" href="http://fibasile.github.io/arduino-yun-getting-started.html">Read more...</a>
-                    
-                </article>
-
-                <hr/>
-            
-
-           
-                <article>
-                    <h1 class="entry-title"><a href="http://fibasile.github.io/quickcanvas-webapp.html">QuickCanvas, a lean business canvas web app</a></h1> 
-                    <footer class="post-info">
-
-<p>        <abbr class="published" title="2013-09-04T16:20:00">
-                Wed 04 September 2013
-        </abbr>
-
-        <!--               <address class="vcard author">
-                      By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
-              </address>
-               -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-        <a href="http://fibasile.github.io/tag/projects.html">
-        <span class="label label-default">projects</span>
-        </a>
-        <a href="http://fibasile.github.io/tag/opensource.html">
-        <span class="label label-default">opensource</span>
-        </a>
-        <a href="http://fibasile.github.io/tag/angularjs.html">
-        <span class="label label-default">angularjs</span>
-        </a>
-         </p>
+<p>This will checkout the OpenWRT buildroot with specific Arduino YUN modifications</p>
+<h2>Prerequisites</h2>
+<p>In order to successfully compile the builroot you'll need a few packages installed: for Debian Stable you can easily get them by running as root (or with sudo)</p>
+<div class="highlight"><pre><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">subversion</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">git</span><span class="o">-</span><span class="n">core</span> <span class="n">libncurses5</span><span class="o">-</span><span class="n">dev</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">gawk</span> <span class="n">asciidoc</span> <span class="n">bash</span> <span class="n">bc</span> <span class="n">binutils</span> <span class="n">bzip2</span> <span class="n">fastjar</span> 
+<span class="n">flex</span> <span class="n">g</span><span class="o">++</span> <span class="n">gcc</span> <span class="n">util</span><span class="o">-</span><span class="n">linux</span> <span class="n">jikespg</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">libncurses5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">perl</span><span class="o">-</span><span class="n">modules</span> <span class="n">python2</span><span class="mf">.6</span><span class="o">-</span><span class="n">dev</span> <span class="n">rsync</span> <span class="n">ruby</span> <span class="n">sdcc</span> <span class="n">unzip</span> <span class="n">wget</span> 
+<span class="n">gettext</span> <span class="n">xsltproc</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxml</span><span class="o">-</span><span class="n">parser</span><span class="o">-</span><span class="n">perl</span>
+</pre></div>
 
 
-</footer><!-- /.post-info --><p>A practical example of AngularJS and JSPDF usage</p><p>There are <a href="http://fibasile.github.io/quickcanvas-webapp.html#disqus_thread">comments</a>.</p>                    <a class="btn btn-success" href="http://fibasile.github.io/quickcanvas-webapp.html">Read more...</a>
-                    
-                </article>
-
-                <hr/>
-            
-
-           
-                <article>
-                    <h1 class="entry-title"><a href="http://fibasile.github.io/dropbox-virtualenv.html">Dropbox and Python Virtualenv</a></h1> 
-                    <footer class="post-info">
-
-<p>        <abbr class="published" title="2013-08-29T15:26:00">
-                Thu 29 August 2013
-        </abbr>
-
-        <!--               <address class="vcard author">
-                      By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
-              </address>
-               -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-        <a href="http://fibasile.github.io/tag/python.html">
-        <span class="label label-default">python</span>
-        </a>
-        <a href="http://fibasile.github.io/tag/dropbox.html">
-        <span class="label label-default">dropbox</span>
-        </a>
-         </p>
+<p>I've included a few you might already have installed, just in case someone had removed them, it won't hurt anyway to put them on the command line.</p>
+<h2>Disk usage and Network connection</h2>
+<p>You should make sure that you have enough disk space before starting the build process. It won't be nice to leave it building and find out the process stopped since you did run out of space, please consider at least 10GB to be safe.</p>
+<p>Also make sure to have a decent internet connection on, since the buildroot system will need to fetch lots of data from the network.</p>
+<h2>Configuring the kernel</h2>
+<p>Once you're done with prerequisites go on to configure the kernel:</p>
+<div class="highlight"><pre><span class="n">cd</span>  <span class="n">linino</span><span class="o">/</span><span class="n">trunk</span>
+<span class="n">make</span> <span class="n">menuconfig</span>
+</pre></div>
 
 
-</footer><!-- /.post-info --><p>Since I started using Dropbox to sync my project folder it started spitting out some weird permission errors. Tired of this I investigated the problem: here's the explanation and a quick fix.</p><p>There are <a href="http://fibasile.github.io/dropbox-virtualenv.html#disqus_thread">comments</a>.</p>                    <a class="btn btn-success" href="http://fibasile.github.io/dropbox-virtualenv.html">Read more...</a>
-                    
-                </article>
-
-                <hr/>
-            
-
-           
-                <article>
-                    <h1 class="entry-title"><a href="http://fibasile.github.io/ardos-operating-system.html">ArdOS An OS for Arduino</a></h1> 
-                    <footer class="post-info">
-
-<p>        <abbr class="published" title="2013-08-28T10:20:00">
-                Wed 28 August 2013
-        </abbr>
-
-        <!--               <address class="vcard author">
-                      By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
-              </address>
-               -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-        <a href="http://fibasile.github.io/tag/arduino.html">
-        <span class="label label-default">arduino</span>
-        </a>
-        <a href="http://fibasile.github.io/tag/ardos.html">
-        <span class="label label-default">ardos</span>
-        </a>
-         </p>
+<p>If all the steps above have been done correctly you will be presented with a familiar menu, similar to the standard Linux kernel
+build. Go on and select the kernel modules, and packages you want to build.</p>
+<p>Once you exit you can compare with diff the generated config with the one available on the Arduino YUN package repository, this should be
+located at <a href="http://download.linino.org/dogstick/all-in-one/latest/">http://download.linino.org/dogstick/all-in-one/latest/build-config.txt</a>.</p>
+<h2>Build it</h2>
+<p>Now you can just run make to start the build process, get a cup of coffee, or several considering it needs to fetch many packages i.e. the Linux kernel and build lots of stuff.  </p>
+<div class="highlight"><pre><span class="n">make</span> <span class="n">V</span><span class="o">=</span><span class="n">s</span>
+</pre></div>
 
 
-</footer><!-- /.post-info --><p>A short overview of ArdOS, a realtime operating system for Arduino</p><p>There are <a href="http://fibasile.github.io/ardos-operating-system.html#disqus_thread">comments</a>.</p>                    <a class="btn btn-success" href="http://fibasile.github.io/ardos-operating-system.html">Read more...</a>
-                    
-                </article>
-
-                <hr/>
-            
-
-           
-                <article>
-                    <h1 class="entry-title"><a href="http://fibasile.github.io/blog-moved-to-pelican.html">Blog moved to Pelican</a></h1> 
-                    <footer class="post-info">
-
-<p>        <abbr class="published" title="2013-08-26T10:20:00">
-                Mon 26 August 2013
-        </abbr>
-
-        <!--               <address class="vcard author">
-                      By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
-              </address>
-               -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-        <a href="http://fibasile.github.io/tag/pelican.html">
-        <span class="label label-default">pelican</span>
-        </a>
-        <a href="http://fibasile.github.io/tag/publishing.html">
-        <span class="label label-default">publishing</span>
-        </a>
-         </p>
-
-
-</footer><!-- /.post-info --><p>I decided to move my blog to something more pythonic</p><p>There are <a href="http://fibasile.github.io/blog-moved-to-pelican.html#disqus_thread">comments</a>.</p>                    <a class="btn btn-success" href="http://fibasile.github.io/blog-moved-to-pelican.html">Read more...</a>
-                    
-                </article>
-
-                <hr/>
-                       
+<p>Please note that using the V=s param switches on verbose output. If you like you can add -j4 or -j8 depending on how many cores you configured on your machine or VM to speed things up a little.</p>
+<p>At the end of the process you should have images ready to be uploaded via TFTP (I'm currently investigating how), and a complete cross-compiling toolchain to test out new packages, and eventually package and contribute them to the offical repository.</p>
+<p>Have fun! </p>
+<h2>Troubleshooting</h2>
+<p>If the build stops for some reason please check</p>
+<ul>
+<li>you have enough free disk space</li>
+<li>you have installed all the prerequisites</li>
+<li>you are using the correct config, when in doubt copy over the one downloaded from the dogstick site</li>
+</ul>
+    </div><!-- /.entry-content -->
+        <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_identifier = "arduino-yun-custom-buildroot.html";
+        var disqus_url = "http://fibasile.github.io/arduino-yun-custom-buildroot.html";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://fibasile.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    </div>
+    
+  </article>
+</section>
+                   
         
             </div>
             

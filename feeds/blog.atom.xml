@@ -1,5 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/blog.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-09-13T13:20:00+02:00</updated><entry><title>Getting Started with Arduino YUN</title><link href="http://fibasile.github.io/arduino-yun-getting-started.html" rel="alternate"></link><updated>2013-09-13T13:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-09-13:arduino-yun-getting-started.html</id><summary type="html">&lt;p&gt;I just received my &lt;a href="http://arduino.cc/en/Main/ArduinoBoardYun?from=Main.ArduinoYUN"&gt;Arduino YUN&lt;/a&gt;, a new product from &lt;a href="http://arduino.cc"&gt;Officine Arduino&lt;/a&gt; bridging the gap between microcontrollers and embedded Linux devices.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/blog.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-09-14T10:04:00+02:00</updated><entry><title>Building a custom image for Arduino YUN</title><link href="http://fibasile.github.io/arduino-yun-custom-buildroot.html" rel="alternate"></link><updated>2013-09-14T10:04:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-09-14:arduino-yun-custom-buildroot.html</id><summary type="html">&lt;p&gt;As soon as I got my hands on the YUN I found the selection of packages lacks many interesting pieces of software that could
+help building interesting appliances. I think Arduino people selected those packages that would easily fit in the minimal 64MB flash. &lt;/p&gt;
+&lt;p&gt;So first of all I formatted a 4GB mini-sd as ext3 and plugged it in to the mini, it was recognized as /dev/sda1, so I quickly added an /opt folder and mounted in there instead. Now I have plenty of space to add my custom packages, and some "secure" disk space just in case I have to wipe my YUN loosing all flash content.&lt;/p&gt;
+&lt;p&gt;Resetting the YUN flash is done by holding the reset button for 30 seconds. Holding it for 5 just resets the WiFi config.&lt;/p&gt;
+&lt;p&gt;Then I spent some time to collect all the information needed to setup our own buildroot for the YUN, here you can find
+a few tips to do it yourself. &lt;/p&gt;
+&lt;p&gt;As I'm on a Mac, it is wise to use a VirtualBox machine (save you lots of headaches), with the latest Debian stable distribution.&lt;/p&gt;
+&lt;h2&gt;What's a buildroot&lt;/h2&gt;
+&lt;p&gt;The Arduino YUN is based on a Linux distribution called &lt;a href="openwrt.org"&gt;OpenWRT&lt;/a&gt;, which is mostly used to mess with wireless and network routers, liberating them from a proprietary firmware and adding many interesting features.&lt;/p&gt;
+&lt;p&gt;In order to build such firmware, you need to build a cross-compiling toolchain first, a Linux kernel, and the core programs needed by any Linux systems.&lt;/p&gt;
+&lt;p&gt;For making it easier OpenWRT people, did set up a Buildroot, or a set of scripts and makefiles which do just this in a confortable way, also using ipkg, a clone of Debian's dpkg to easily install packages when the system is setup. The system is based off &lt;a href="http://www.openembedded.org/wiki/Main_Page"&gt;OpenEmbedded&lt;/a&gt; which I was using long time ago to hack Sharp Zaurus. &lt;/p&gt;
+&lt;p&gt;Arduino made a good choice to base their new Arduino YUN off OpenWRT, as it has a huge following and is quite nice build environment to work with.&lt;/p&gt;
+&lt;p&gt;A nice intro on OpenWRT build root is available on this &lt;a href="https://forum.openwrt.org/viewtopic.php?pid=31794#p31794"&gt;forum post&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Getting the source&lt;/h2&gt;
+&lt;p&gt;First of all you should clone the Arduino YUN buildroot sources, available from &lt;a href="http://github.com/arduino/linino"&gt;github&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;clone&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//github.com/arduino/linino.git linino&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will checkout the OpenWRT buildroot with specific Arduino YUN modifications&lt;/p&gt;
+&lt;h2&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;In order to successfully compile the builroot you'll need a few packages installed: for Debian Stable you can easily get them by running as root (or with sudo)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;subversion&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;essential&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt; &lt;span class="n"&gt;libncurses5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;zlib1g&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;gawk&lt;/span&gt; &lt;span class="n"&gt;asciidoc&lt;/span&gt; &lt;span class="n"&gt;bash&lt;/span&gt; &lt;span class="n"&gt;bc&lt;/span&gt; &lt;span class="n"&gt;binutils&lt;/span&gt; &lt;span class="n"&gt;bzip2&lt;/span&gt; &lt;span class="n"&gt;fastjar&lt;/span&gt; 
+&lt;span class="n"&gt;flex&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt; &lt;span class="n"&gt;gcc&lt;/span&gt; &lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt; &lt;span class="n"&gt;jikespg&lt;/span&gt; &lt;span class="n"&gt;zlib1g&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;libncurses5&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;libssl&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;perl&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;modules&lt;/span&gt; &lt;span class="n"&gt;python2&lt;/span&gt;&lt;span class="mf"&gt;.6&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;rsync&lt;/span&gt; &lt;span class="n"&gt;ruby&lt;/span&gt; &lt;span class="n"&gt;sdcc&lt;/span&gt; &lt;span class="n"&gt;unzip&lt;/span&gt; &lt;span class="n"&gt;wget&lt;/span&gt; 
+&lt;span class="n"&gt;gettext&lt;/span&gt; &lt;span class="n"&gt;xsltproc&lt;/span&gt; &lt;span class="n"&gt;zlib1g&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt; &lt;span class="n"&gt;libxml&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;perl&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I've included a few you might already have installed, just in case someone had removed them, it won't hurt anyway to put them on the command line.&lt;/p&gt;
+&lt;h2&gt;Disk usage and Network connection&lt;/h2&gt;
+&lt;p&gt;You should make sure that you have enough disk space before starting the build process. It won't be nice to leave it building and find out the process stopped since you did run out of space, please consider at least 10GB to be safe.&lt;/p&gt;
+&lt;p&gt;Also make sure to have a decent internet connection on, since the buildroot system will need to fetch lots of data from the network.&lt;/p&gt;
+&lt;h2&gt;Configuring the kernel&lt;/h2&gt;
+&lt;p&gt;Once you're done with prerequisites go on to configure the kernel:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt;  &lt;span class="n"&gt;linino&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;trunk&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;menuconfig&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If all the steps above have been done correctly you will be presented with a familiar menu, similar to the standard Linux kernel
+build. Go on and select the kernel modules, and packages you want to build.&lt;/p&gt;
+&lt;p&gt;Once you exit you can compare with diff the generated config with the one available on the Arduino YUN package repository, this should be
+located at &lt;a href="http://download.linino.org/dogstick/all-in-one/latest/"&gt;http://download.linino.org/dogstick/all-in-one/latest/build-config.txt&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Build it&lt;/h2&gt;
+&lt;p&gt;Now you can just run make to start the build process, get a cup of coffee, or several considering it needs to fetch many packages i.e. the Linux kernel and build lots of stuff.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;V&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Please note that using the V=s param switches on verbose output. If you like you can add -j4 or -j8 depending on how many cores you configured on your machine or VM to speed things up a little.&lt;/p&gt;
+&lt;p&gt;At the end of the process you should have images ready to be uploaded via TFTP (I'm currently investigating how), and a complete cross-compiling toolchain to test out new packages, and eventually package and contribute them to the offical repository.&lt;/p&gt;
+&lt;p&gt;Have fun! &lt;/p&gt;
+&lt;h2&gt;Troubleshooting&lt;/h2&gt;
+&lt;p&gt;If the build stops for some reason please check&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;you have enough free disk space&lt;/li&gt;
+&lt;li&gt;you have installed all the prerequisites&lt;/li&gt;
+&lt;li&gt;you are using the correct config, when in doubt copy over the one downloaded from the dogstick site&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="projects"></category><category term="opensource"></category><category term="arduino"></category><category term="yun"></category></entry><entry><title>Getting Started with Arduino YUN</title><link href="http://fibasile.github.io/arduino-yun-getting-started.html" rel="alternate"></link><updated>2013-09-13T13:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-09-13:arduino-yun-getting-started.html</id><summary type="html">&lt;p&gt;I just received my &lt;a href="http://arduino.cc/en/Main/ArduinoBoardYun?from=Main.ArduinoYUN"&gt;Arduino YUN&lt;/a&gt;, a new product from &lt;a href="http://arduino.cc"&gt;Officine Arduino&lt;/a&gt; bridging the gap between microcontrollers and embedded Linux devices.&lt;/p&gt;
 &lt;p&gt;The YUN packs in the form factor both devices, also adding USB, Wifi, Ethernet connectivity.&lt;/p&gt;
 &lt;p&gt;I think many people willing to buy it could find interesting to learn how it works, and also some newbies could need some help to get started using it, so here's a quick guide of the steps to follow to get the YUN configured using a WiFi network connection: &lt;/p&gt;
 &lt;p&gt;1) plug the mini-USB port on the YUN to your computer or to a usb-compatible charger using a mini-USB cable&lt;/p&gt;
