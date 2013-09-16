@@ -140,7 +140,9 @@ a few tips to do it yourself. </p>
 <p>Also make sure to have a decent internet connection on, since the buildroot system will need to fetch lots of data from the network.</p>
 <h2>Configuring the kernel</h2>
 <p>Once you're done with prerequisites go on to configure the kernel:</p>
-<div class="highlight"><pre><span class="n">cd</span>  <span class="n">linino</span><span class="o">/</span><span class="n">trunk</span>
+<div class="highlight"><pre><span class="n">cd</span>  <span class="n">linino</span><span class="o">/</span><span class="n">trunk</span>    
+<span class="p">.</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">feeds</span> <span class="n">update</span> <span class="o">-</span><span class="n">a</span>
+<span class="p">.</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">feeds</span> <span class="n">install</span> <span class="o">-</span><span class="n">a</span>
 <span class="n">make</span> <span class="n">menuconfig</span>
 </pre></div>
 
@@ -149,6 +151,17 @@ a few tips to do it yourself. </p>
 build. Go on and select the kernel modules, and packages you want to build.</p>
 <p>Once you exit you can compare with diff the generated config with the one available on the Arduino YUN package repository, this should be
 located at <a href="http://download.linino.org/dogstick/all-in-one/latest/">http://download.linino.org/dogstick/all-in-one/latest/build-config.txt</a>.</p>
+<p>EDIT: If you want to keep the same config and packages getting built by Yun developers, also do:</p>
+<div class="highlight"><pre><span class="p">.</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">feeds</span> <span class="n">uninstall</span> <span class="o">-</span><span class="n">a</span>
+<span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="n">feeds</span>
+<span class="p">.</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">feeds</span> <span class="n">update</span> <span class="o">-</span><span class="n">a</span>
+<span class="p">.</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">feeds</span> <span class="n">install</span> <span class="o">-</span><span class="n">a</span>
+<span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="p">.</span><span class="n">config</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="p">.</span><span class="n">config</span>
+<span class="n">make</span> <span class="n">oldconfig</span>
+</pre></div>
+
+
 <h2>Build it</h2>
 <p>Now you can just run make to start the build process, get a cup of coffee, or several considering it needs to fetch many packages i.e. the Linux kernel and build lots of stuff.  </p>
 <div class="highlight"><pre><span class="n">make</span> <span class="n">V</span><span class="o">=</span><span class="n">s</span>
@@ -165,6 +178,8 @@ located at <a href="http://download.linino.org/dogstick/all-in-one/latest/">http
 <li>you have installed all the prerequisites</li>
 <li>you are using the correct config, when in doubt copy over the one downloaded from the dogstick site</li>
 </ul>
+<h2>Changelog</h2>
+<p>UPDATED 2013-09-16: I added instructions got from the Arduino forums allowing to keep the original Arduino make config </p>
     </div><!-- /.entry-content -->
         <div class="comments">
       <h2>Comments !</h2>
@@ -223,16 +238,16 @@ located at <a href="http://download.linino.org/dogstick/all-in-one/latest/">http
         <div class="tags">
             <ul  class="list-group">
                   <li class="list-group-item"><strong>Tags</strong></li>
-                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/arduino.html">arduino</a></li>
                                     <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/pelican.html">pelican</a></li>
-                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/opensource.html">opensource</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/yun.html">yun</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/dropbox.html">dropbox</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ardos.html">ardos</a></li>
-                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/projects.html">projects</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/publishing.html">publishing</a></li>
                                     <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/angularjs.html">angularjs</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/yun.html">yun</a></li>
                                     <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/python.html">python</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ardos.html">ardos</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/publishing.html">publishing</a></li>
+                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/arduino.html">arduino</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/dropbox.html">dropbox</a></li>
+                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/opensource.html">opensource</a></li>
+                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/projects.html">projects</a></li>
                             </ul>
             
             

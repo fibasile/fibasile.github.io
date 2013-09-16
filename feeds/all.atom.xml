@@ -34,7 +34,9 @@ a few tips to do it yourself. &lt;/p&gt;
 &lt;p&gt;Also make sure to have a decent internet connection on, since the buildroot system will need to fetch lots of data from the network.&lt;/p&gt;
 &lt;h2&gt;Configuring the kernel&lt;/h2&gt;
 &lt;p&gt;Once you're done with prerequisites go on to configure the kernel:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt;  &lt;span class="n"&gt;linino&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;trunk&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt;  &lt;span class="n"&gt;linino&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;trunk&lt;/span&gt;    
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;scripts&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;feeds&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;scripts&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;feeds&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;
 &lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;menuconfig&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -43,6 +45,17 @@ a few tips to do it yourself. &lt;/p&gt;
 build. Go on and select the kernel modules, and packages you want to build.&lt;/p&gt;
 &lt;p&gt;Once you exit you can compare with diff the generated config with the one available on the Arduino YUN package repository, this should be
 located at &lt;a href="http://download.linino.org/dogstick/all-in-one/latest/"&gt;http://download.linino.org/dogstick/all-in-one/latest/build-config.txt&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;EDIT: If you want to keep the same config and packages getting built by Yun developers, also do:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;scripts&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;feeds&lt;/span&gt; &lt;span class="n"&gt;uninstall&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;
+&lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rf&lt;/span&gt; &lt;span class="n"&gt;feeds&lt;/span&gt;
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;scripts&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;feeds&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;
+&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;scripts&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;feeds&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;
+&lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;checkout&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;oldconfig&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
 &lt;h2&gt;Build it&lt;/h2&gt;
 &lt;p&gt;Now you can just run make to start the build process, get a cup of coffee, or several considering it needs to fetch many packages i.e. the Linux kernel and build lots of stuff.  &lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;V&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;
@@ -58,7 +71,9 @@ located at &lt;a href="http://download.linino.org/dogstick/all-in-one/latest/"&g
 &lt;li&gt;you have enough free disk space&lt;/li&gt;
 &lt;li&gt;you have installed all the prerequisites&lt;/li&gt;
 &lt;li&gt;you are using the correct config, when in doubt copy over the one downloaded from the dogstick site&lt;/li&gt;
-&lt;/ul&gt;</summary><category term="projects"></category><category term="opensource"></category><category term="arduino"></category><category term="yun"></category></entry><entry><title>Getting Started with Arduino YUN</title><link href="http://fibasile.github.io/arduino-yun-getting-started.html" rel="alternate"></link><updated>2013-09-13T13:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-09-13:arduino-yun-getting-started.html</id><summary type="html">&lt;p&gt;I just received my &lt;a href="http://arduino.cc/en/Main/ArduinoBoardYun?from=Main.ArduinoYUN"&gt;Arduino YUN&lt;/a&gt;, a new product from &lt;a href="http://arduino.cc"&gt;Officine Arduino&lt;/a&gt; bridging the gap between microcontrollers and embedded Linux devices.&lt;/p&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Changelog&lt;/h2&gt;
+&lt;p&gt;UPDATED 2013-09-16: I added instructions got from the Arduino forums allowing to keep the original Arduino make config &lt;/p&gt;</summary><category term="projects"></category><category term="opensource"></category><category term="arduino"></category><category term="yun"></category></entry><entry><title>Getting Started with Arduino YUN</title><link href="http://fibasile.github.io/arduino-yun-getting-started.html" rel="alternate"></link><updated>2013-09-13T13:20:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-09-13:arduino-yun-getting-started.html</id><summary type="html">&lt;p&gt;I just received my &lt;a href="http://arduino.cc/en/Main/ArduinoBoardYun?from=Main.ArduinoYUN"&gt;Arduino YUN&lt;/a&gt;, a new product from &lt;a href="http://arduino.cc"&gt;Officine Arduino&lt;/a&gt; bridging the gap between microcontrollers and embedded Linux devices.&lt;/p&gt;
 &lt;p&gt;The YUN packs in the form factor both devices, also adding USB, Wifi, Ethernet connectivity.&lt;/p&gt;
 &lt;p&gt;I think many people willing to buy it could find interesting to learn how it works, and also some newbies could need some help to get started using it, so here's a quick guide of the steps to follow to get the YUN configured using a WiFi network connection: &lt;/p&gt;
 &lt;p&gt;1) plug the mini-USB port on the YUN to your computer or to a usb-compatible charger using a mini-USB cable&lt;/p&gt;
