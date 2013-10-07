@@ -1,5 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/all.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-10-07T12:36:00+02:00</updated><entry><title>A short Maker Faire Europe Recap</title><link href="http://fibasile.github.io/short-maker-faire-recap.html" rel="alternate"></link><updated>2013-10-07T12:36:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-07:short-maker-faire-recap.html</id><summary type="html">&lt;p&gt;While my memories are still fresh I think it could be interesting to describe what happend at the European Maker Faire from my point of view.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/all.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-10-07T17:48:00+02:00</updated><entry><title>Interesting facts on the new Intel Galileo board</title><link href="http://fibasile.github.io/interesting-facts-on-intel-galileo.html" rel="alternate"></link><updated>2013-10-07T17:48:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-07:interesting-facts-on-intel-galileo.html</id><summary type="html">&lt;p&gt;The new Intel Galileo board is the first intel-based Arduino compatible board. I was given one during the Maker Faire Rome and today I spent some time checking the software and how it is programmed using Arduino.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt; How the Arduino IDE talks to the board &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;First interesting fact: the board is interfaced with the Arduino IDE through serial ZModem transfer.&lt;/p&gt;
+&lt;p&gt;Digging into the ../Java/hardware/tools/x86 folder of the Arduino IDE downloaded for the board, you can find the toolchain and an upgrade.sh file. This is the file used by the Arduino IDE to upload sketches, compiled in elf format on the main PC and sent via
+ZModem to the board.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt; Serial port access &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Another interesting fact is that the USB client connector doesn't give access to the actual tty port of the Linux distribution, but probably listens only for Arduino IDE commands and serial monitor.&lt;/p&gt;
+&lt;p&gt;The program responsible for this is called clloader &lt;/p&gt;
+&lt;p&gt;/opt/cln/galileo/clloader --escape --binary --zmodem&lt;/p&gt;
+&lt;p&gt;In order to have access to the tty one should use the Audio-jack port sitting on the left of the Ethernet port (called ttyS1). I never saw such a cable, but probably I'm not well informed. I would love to know where to get or how to build one.&lt;/p&gt;
+&lt;p&gt;It would be lovely to access the console using the second USB port! &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt; SSH &amp;amp; Ethernet connectivity &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;I also checked the Ethernet connectivity. With the stock "mini" Linux flashed on the board, Intel says it has no DHCP. But I discovered that Linux side gets correctly an IP address, and the Ethernet sketches work out of the box. &lt;/p&gt;
+&lt;p&gt;Running ps tells that udhcp daemon is running.&lt;/p&gt;
+&lt;p&gt;For accessing the board via SSH you need to install the provided Linux image on a micro sd card, as no ssh daemon is running.&lt;/p&gt;
+&lt;p&gt;A trick to have a look to what is running is to use the ZModem protocol to execute remote commands, for example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lsz&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;ps&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;cu&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;usbmodem1411&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;cu&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;usbmodem1411&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt; Bogomips and buildroot &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Using the trick I checked out dmesg, and discovered the Galileo kernel is Linux version 3.8.7-yocto-standard, compiled using the &lt;a href="https://www.yoctoproject.org"&gt;https://www.yoctoproject.org&lt;/a&gt; build system and Gcc 4.7.2.&lt;/p&gt;
+&lt;p&gt;The CPU is rated 798.17 BogoMIPS, not bad!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt; Using GPIO pins at blazing fast speeds &lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Finally I just learnt from a forum post, that it is actually possible to run GPIO pins at up to 2.93MHz using extended Arduino APIs, such as fastGpioDigitalWrite and fastGpioDigitalWriteDestructive. In this last case it is responsibility of the programmer to ensure GPIO registers are correct, directly handling latch. &lt;/p&gt;
+&lt;p&gt;These are the arduino code examples posted by Intel engineers, &lt;a href="https://communities.intel.com/message/208098#208098"&gt;see full post&lt;/a&gt; for details:&lt;/p&gt;
+&lt;p&gt;Example-1 - outputs 477kHz waveform on IO2:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+    &lt;span class="n"&gt;pinMode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;OUTPUT_FAST&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;register&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="n"&gt;digitalWrite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=!&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Example-2 - outputs 683kHz waveform on IO3:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+    &lt;span class="n"&gt;pinMode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;OUTPUT_FAST&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;register&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="n"&gt;fastGpioDigitalWrite&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GPIO_FAST_IO3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=!&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Example-3 - outputs 2.93MHz waveform on IO3:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;uint32_t&lt;/span&gt; &lt;span class="n"&gt;latchValue&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+    &lt;span class="n"&gt;pinMode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;OUTPUT_FAST&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;latchValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fastGpioDigitalLatch&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="n"&gt;fastGpioDigitalWriteDestructive&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;latchValue&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+       &lt;span class="n"&gt;latchValue&lt;/span&gt; &lt;span class="o"&gt;^=&lt;/span&gt; &lt;span class="n"&gt;GPIO_FAST_IO3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Example-4 - outputs 2.93MHz waveform on both IO2 and IO3:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;uint32_t&lt;/span&gt; &lt;span class="n"&gt;latchValue&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(){&lt;/span&gt;
+    &lt;span class="n"&gt;pinMode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;OUPUT_FASTMODE&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;pinMode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;OUPUT_FASTMODE&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;latchValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fastGpioDigitalLatch&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="c1"&gt;// latch initial state&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="n"&gt;loop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+        &lt;span class="n"&gt;fastGpioDigitalWriteDestructive&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;latchValue&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;latchValue&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;GPIO_FAST_IO3&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+            &lt;span class="n"&gt;latchValue&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;GPIO_FAST_IO2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;latchValue&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;=&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt; &lt;span class="n"&gt;GPIO_FAST_IO3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;latchValue&lt;/span&gt; &lt;span class="o"&gt;|=&lt;/span&gt; &lt;span class="n"&gt;GPIO_FAST_IO3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="n"&gt;latchValue&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;=&lt;/span&gt; &lt;span class="n"&gt;GPIO_FAST_IO2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As a forum user wrote, this is a "totally new beast".&lt;/p&gt;</summary><category term="makers"></category><category term="intel"></category><category term="galileo"></category><category term="arduino"></category></entry><entry><title>A short Maker Faire Europe Recap</title><link href="http://fibasile.github.io/short-maker-faire-recap.html" rel="alternate"></link><updated>2013-10-07T12:36:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-07:short-maker-faire-recap.html</id><summary type="html">&lt;p&gt;While my memories are still fresh I think it could be interesting to describe what happend at the European Maker Faire from my point of view.&lt;/p&gt;
 &lt;p&gt;It was a huge success with tens of thousands of visitors and thousands of makers from around the world.&lt;/p&gt;
 &lt;p&gt;I'm not "new" to technology events and I had already seen most of the 3d printers and stuff presented during the event on blogs and so on. So this report won't talk about how impressed I was about seeing 3d printers everywhere, robots, wearable, electronics etc.&lt;/p&gt;
 &lt;p&gt;The first thing that really pleased me was how easy it was to talk to the people. Makers, entrepreneurs, geeks at large, everybody was keen to learn and discover new projects and meet others. I got in contact with very talented people and promising companies, I will keep in touch with them hoping to do new projects with collaborations all over the world.  &lt;/p&gt;

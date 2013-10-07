@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>Dropbox and Python Virtualenv</title>
+    <title>Interesting facts on the new Intel Galileo board</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
@@ -73,16 +73,16 @@
   <article>
     <header>
       <h1 class="entry-title">
-        <a href="http://fibasile.github.io/dropbox-virtualenv.html" rel="bookmark"
-           title="Permalink to Dropbox and Python Virtualenv">Dropbox and Python Virtualenv</a></h1>
+        <a href="http://fibasile.github.io/interesting-facts-on-intel-galileo.html" rel="bookmark"
+           title="Permalink to Interesting facts on the new Intel Galileo board">Interesting facts on the new Intel Galileo board</a></h1>
       <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
     </header>
 
     <div class="entry-content">
       <footer class="post-info">
 
-<p>        <abbr class="published" title="2013-08-29T15:26:00">
-                Thu 29 August 2013
+<p>        <abbr class="published" title="2013-10-07T17:48:00">
+                Mon 07 October 2013
         </abbr>
 
         <!--               <address class="vcard author">
@@ -90,38 +90,124 @@
               </address>
                -->
 | Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-        <a href="http://fibasile.github.io/tag/python.html">
-        <span class="label label-default">python</span>
+        <a href="http://fibasile.github.io/tag/makers.html">
+        <span class="label label-default">makers</span>
         </a>
-        <a href="http://fibasile.github.io/tag/dropbox.html">
-        <span class="label label-default">dropbox</span>
+        <a href="http://fibasile.github.io/tag/intel.html">
+        <span class="label label-default">intel</span>
+        </a>
+        <a href="http://fibasile.github.io/tag/galileo.html">
+        <span class="label label-default">galileo</span>
+        </a>
+        <a href="http://fibasile.github.io/tag/arduino.html">
+        <span class="label label-default">arduino</span>
         </a>
          </p>
 
 
-</footer><!-- /.post-info -->      <p>Since most of my systems are 64 bits macs, and I was using Python's excellent virtualenv system, I though it was possibly to just copy over the virtualenvs inside my project folders. </p>
-<p>Fact is that after a while, Dropbox will get stuck in changing some system's file permission, and it wont' sync anymore. As I found out, the only solution is to move your virtual envs out of the Dropbox folder.
-I hope to save you some time with this tip.</p>
-<p>If you don't know it, Virtualenv basically links your system's python library and interpreter in a folder you specify, letting you use pip to install locally any module you need without polluting the system's paths.</p>
-<p>But Dropbox doesn't like those symlinks, especially when they link system folders. </p>
-<p>Quick fix: If you use virtualenv you should create your envs in a folder not synched by dropbox, i.e. something like ~/.virtualenvs/ i.e.</p>
-<div class="highlight"><pre><span class="n">virtualenv</span> <span class="o">~/</span><span class="p">.</span><span class="n">virtualenvs</span><span class="o">/</span><span class="n">myproject</span>
+</footer><!-- /.post-info -->      <p>The new Intel Galileo board is the first intel-based Arduino compatible board. I was given one during the Maker Faire Rome and today I spent some time checking the software and how it is programmed using Arduino.</p>
+<p><strong> How the Arduino IDE talks to the board </strong></p>
+<p>First interesting fact: the board is interfaced with the Arduino IDE through serial ZModem transfer.</p>
+<p>Digging into the ../Java/hardware/tools/x86 folder of the Arduino IDE downloaded for the board, you can find the toolchain and an upgrade.sh file. This is the file used by the Arduino IDE to upload sketches, compiled in elf format on the main PC and sent via
+ZModem to the board.</p>
+<p><strong> Serial port access </strong></p>
+<p>Another interesting fact is that the USB client connector doesn't give access to the actual tty port of the Linux distribution, but probably listens only for Arduino IDE commands and serial monitor.</p>
+<p>The program responsible for this is called clloader </p>
+<p>/opt/cln/galileo/clloader --escape --binary --zmodem</p>
+<p>In order to have access to the tty one should use the Audio-jack port sitting on the left of the Ethernet port (called ttyS1). I never saw such a cable, but probably I'm not well informed. I would love to know where to get or how to build one.</p>
+<p>It would be lovely to access the console using the second USB port! </p>
+<p><strong> SSH &amp; Ethernet connectivity </strong></p>
+<p>I also checked the Ethernet connectivity. With the stock "mini" Linux flashed on the board, Intel says it has no DHCP. But I discovered that Linux side gets correctly an IP address, and the Ethernet sketches work out of the box. </p>
+<p>Running ps tells that udhcp daemon is running.</p>
+<p>For accessing the board via SSH you need to install the provided Linux image on a micro sd card, as no ssh daemon is running.</p>
+<p>A trick to have a look to what is running is to use the ZModem protocol to execute remote commands, for example:</p>
+<div class="highlight"><pre><span class="p">.</span><span class="o">/</span><span class="n">lsz</span> <span class="o">-</span><span class="n">e</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">c</span> <span class="s">&quot;ps&quot;</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">cu</span><span class="p">.</span><span class="n">usbmodem1411</span> <span class="o">&lt;</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">cu</span><span class="p">.</span><span class="n">usbmodem1411</span>
 </pre></div>
 
 
-<p>When you are done installing all the modules using pip you can generate a <code>requirements.txt</code> file using</p>
-<div class="highlight"><pre><span class="n">pip</span> <span class="n">freeze</span> <span class="o">&gt;</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+<p><strong> Bogomips and buildroot </strong></p>
+<p>Using the trick I checked out dmesg, and discovered the Galileo kernel is Linux version 3.8.7-yocto-standard, compiled using the <a href="https://www.yoctoproject.org">https://www.yoctoproject.org</a> build system and Gcc 4.7.2.</p>
+<p>The CPU is rated 798.17 BogoMIPS, not bad!</p>
+<p><strong> Using GPIO pins at blazing fast speeds </strong></p>
+<p>Finally I just learnt from a forum post, that it is actually possible to run GPIO pins at up to 2.93MHz using extended Arduino APIs, such as fastGpioDigitalWrite and fastGpioDigitalWriteDestructive. In this last case it is responsibility of the programmer to ensure GPIO registers are correct, directly handling latch. </p>
+<p>These are the arduino code examples posted by Intel engineers, <a href="https://communities.intel.com/message/208098#208098">see full post</a> for details:</p>
+<p>Example-1 - outputs 477kHz waveform on IO2:</p>
+<div class="highlight"><pre><span class="n">setup</span><span class="p">(){</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">OUTPUT_FAST</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">register</span> <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">digitalWrite</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+        <span class="n">x</span> <span class="o">=!</span><span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 
 
-<p>Then when you are on another machine re-create the virtualenv using the first command and reinstall every module using <code>pip install -r requirements.txt</code>. Remember to activate your newly created virtualenv first.</p>
+<p>Example-2 - outputs 683kHz waveform on IO3:</p>
+<div class="highlight"><pre><span class="n">setup</span><span class="p">(){</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">OUTPUT_FAST</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">register</span> <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">fastGpioDigitalWrite</span><span class="p">(</span><span class="n">GPIO_FAST_IO3</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+        <span class="n">x</span> <span class="o">=!</span><span class="n">x</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Example-3 - outputs 2.93MHz waveform on IO3:</p>
+<div class="highlight"><pre><span class="kt">uint32_t</span> <span class="n">latchValue</span><span class="p">;</span>
+<span class="n">setup</span><span class="p">(){</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">OUTPUT_FAST</span><span class="p">);</span>
+    <span class="n">latchValue</span> <span class="o">=</span> <span class="n">fastGpioDigitalLatch</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">fastGpioDigitalWriteDestructive</span><span class="p">(</span><span class="n">latchValue</span><span class="p">);</span>
+       <span class="n">latchValue</span> <span class="o">^=</span> <span class="n">GPIO_FAST_IO3</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Example-4 - outputs 2.93MHz waveform on both IO2 and IO3:</p>
+<div class="highlight"><pre><span class="kt">uint32_t</span> <span class="n">latchValue</span><span class="p">;</span>
+<span class="n">setup</span><span class="p">(){</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">OUPUT_FASTMODE</span><span class="p">);</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">OUPUT_FASTMODE</span><span class="p">);</span>
+    <span class="n">latchValue</span> <span class="o">=</span> <span class="n">fastGpioDigitalLatch</span><span class="p">();</span> <span class="c1">// latch initial state</span>
+<span class="p">}</span>
+<span class="n">loop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+        <span class="n">fastGpioDigitalWriteDestructive</span><span class="p">(</span><span class="n">latchValue</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">latchValue</span> <span class="o">&amp;</span> <span class="n">GPIO_FAST_IO3</span><span class="p">){</span>
+            <span class="n">latchValue</span> <span class="o">|=</span> <span class="n">GPIO_FAST_IO2</span><span class="p">;</span>
+            <span class="n">latchValue</span> <span class="o">&amp;=</span> <span class="o">~</span> <span class="n">GPIO_FAST_IO3</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="n">latchValue</span> <span class="o">|=</span> <span class="n">GPIO_FAST_IO3</span><span class="p">;</span>
+            <span class="n">latchValue</span> <span class="o">&amp;=</span> <span class="n">GPIO_FAST_IO2</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>As a forum user wrote, this is a "totally new beast".</p>
     </div><!-- /.entry-content -->
         <div class="comments">
       <h2>Comments !</h2>
       <div id="disqus_thread"></div>
       <script type="text/javascript">
-        var disqus_identifier = "dropbox-virtualenv.html";
-        var disqus_url = "http://fibasile.github.io/dropbox-virtualenv.html";
+        var disqus_identifier = "interesting-facts-on-intel-galileo.html";
+        var disqus_url = "http://fibasile.github.io/interesting-facts-on-intel-galileo.html";
         (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = 'http://fibasile.disqus.com/embed.js';
