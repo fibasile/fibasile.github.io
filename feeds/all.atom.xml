@@ -1,5 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/all.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-10-07T17:48:00+02:00</updated><entry><title>Interesting facts on the new Intel Galileo board</title><link href="http://fibasile.github.io/interesting-facts-on-intel-galileo.html" rel="alternate"></link><updated>2013-10-07T17:48:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-07:interesting-facts-on-intel-galileo.html</id><summary type="html">&lt;p&gt;The new Intel Galileo board is the first intel-based Arduino compatible board. I was given one during the Maker Faire Rome and today I spent some time checking the software and how it is programmed using Arduino.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/all.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-10-16T19:28:00+02:00</updated><entry><title>Compiling Node.js for Arduino YUN</title><link href="http://fibasile.github.io/compiling-nodejs-for-arduino-yun.html" rel="alternate"></link><updated>2013-10-16T19:28:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-16:compiling-nodejs-for-arduino-yun.html</id><summary type="html">&lt;p&gt;Since few weeks I was looking for a web environment to develop an IDE for the YUN. I already compiled an avr toolchain but I was not happy with a python based app server, since it makes difficult to handle websockets in an async fashion and so. &lt;/p&gt;
+&lt;p&gt;So I looked at cross compiling plain node.js for mips, but learnt that Big Endian is not supported by V8, the javascript engine on which node is based. This probably explains why OpenWRT is missing a package for node, while for example it is available on the Intel Galileo distribution.&lt;/p&gt;
+&lt;p&gt;Luckily some folks had already done a set of patches for v8 and managed to compile node.js for the YUN processor. This tutorial is based on the patches available at: &lt;a href="https://github.com/paul99/v8m-rb/pull/19"&gt;https://github.com/paul99/v8m-rb/pull/19&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This tutorial has been tested on Ubuntu 12.04. Make sure you have installed all the required packages for building the linino toolchain (see this &lt;a href="http://forum.arduino.cc//index.php?topic=187938.0"&gt;thread&lt;/a&gt;) plus the &lt;code&gt;gcc-multilib&lt;/code&gt; package.&lt;/p&gt;
+&lt;p&gt;1) Build the Linino toolchain, mine is located at &lt;code&gt;~/Cross/linino&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;2) Create a work folder, mine is called &lt;code&gt;~/Cross/node&lt;/code&gt;. Inside it checkout this patched v8 branch&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;clone&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="c1"&gt;//github.com/paul99/v8m-rb.git -b dm-dev-mipsbe&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;3) Now build the v8 deps&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;v8m&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rb&lt;/span&gt;
+&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;dependencies&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;5) create the v8 build script script, i called it &lt;code&gt;build.sh&lt;/code&gt; &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;STAGING_DIR=/home/fiore/Cross/linino/trunk/staging_dir
+PREFIX=&lt;span class="nv"&gt;$STAGING_DIR&lt;/span&gt;/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-
+
+export CC=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;gcc
+export CXX=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;g++
+export AR=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;ar
+export RANLIB=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;ranlib
+export LINK=&lt;span class="nv"&gt;$CXX&lt;/span&gt;
+LIBPATH=&lt;span class="nv"&gt;$STAGING_DIR&lt;/span&gt;/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/lib/
+export LDFLAGS=&amp;#39;-Wl,-rpath-link &amp;#39;&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;LIBPATH&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;
+
+export GYPFLAGS=&amp;quot;-Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false&amp;quot;
+
+# build a standalone v8 version 
+# make mips.release library=shared  snapshot=off -j4
+
+# build the version for compiling node
+make mips.release library=shared  snapshot=off -j4
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;6) Make it executable and run it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;chmod&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;7) now go on and download node-v0.10.20 source. Uncompress it in a folder with the same name within the work dir&lt;/p&gt;
+&lt;p&gt;8) inside the created folder make a new script build.sh&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;export BASEDIR=/home/fiore/Cross/linino/trunk
+export STAGING_DIR=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;BASEDIR&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/staging_dir
+
+V8SOURCE=/home/fiore/Cross/node/v8m-rb
+
+PREFIX=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;STAGING_DIR&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-
+
+LIBPATH=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;STAGING_DIR&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/lib/
+
+
+export AR=mips-openwrt-linux-uclibc-ar
+export CC=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;gcc
+export CXX=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;g++
+export AR=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;ar
+export RANLIB=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;ranlib
+export LINK=&lt;span class="nv"&gt;$CXX&lt;/span&gt;
+
+export LDFLAGS=&amp;#39;-Wl,-rpath-link &amp;#39;&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;LIBPATH&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;
+
+export TARGET_PATH=~/Cross/node/opt
+
+export GYPFLAGS=&amp;quot;-Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false&amp;quot;
+make clean
+make distclean
+
+./configure --target=~/Cross/node/opt --without-snapshot --shared-v8 --shared-v8-includes=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;V8SOURCE&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/include/ --shared-v8-libpath=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;V8SOURCE&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/out/mips.release/lib.target/
+make snapshot=off -j4
+make install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;9) Make it executable and run it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;chmod&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;10) now you have both libv8 and node, and ready to copy them to the yun, but before make sure to strip them, and put them on the sdcard (both are around 8mb)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Cross&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;v8&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mips&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;release&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libv8&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;so&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Cross&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;
+
+&lt;span class="n"&gt;mips&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;openwrt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Cross&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libv8&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;so&lt;/span&gt;
+&lt;span class="n"&gt;mips&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;openwrt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Cross&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;10b) you might probably also need some other libs for example libstdc++, get them from the toolchain:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cp&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Cross&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linino&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;trunk&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;staging_dir&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;toolchain&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mips_r2_gcc&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;4.6&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linaro_uClibc&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;0.9.33.2&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libstdc&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;so&lt;/span&gt;&lt;span class="mf"&gt;.6&lt;/span&gt; &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Cross&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;11) Copy the nodejs-yun folder to the Yun&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;scp&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt;  &lt;span class="o"&gt;~/&lt;/span&gt;&lt;span class="n"&gt;Cross&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt; &lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;arduino&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;:/&lt;/span&gt;&lt;span class="n"&gt;mnt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sda1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;11) Now go on the Yun and make some symlinks from your /mnt/sda1/opt to the system's root&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sf&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mnt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sda1&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;node&lt;/span&gt;
+&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sf&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mnt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sda1&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;npm&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;npm&lt;/span&gt;
+&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sf&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mnt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sda1&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libv8&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;so&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libv8&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;so&lt;/span&gt;
+&lt;span class="n"&gt;ln&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;sf&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;mnt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;sda1&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;opt&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libstdc&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;so&lt;/span&gt;&lt;span class="mf"&gt;.6&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;libstdc&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;so&lt;/span&gt;&lt;span class="mf"&gt;.6&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;12) Node is now ready, try it! &lt;/p&gt;
+&lt;p&gt;13) YUN has limited memory you can optimize node for it with the following params:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;node&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;stack_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;max_old_space_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;20&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;max_new_space_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2048&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;max_executable_size&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;gc_global&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;gc_interval&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;13) Please note that since you don't have gcc on the Yun any npm module requiring compiling must be cross-compiled on your host machine.&lt;/p&gt;
+&lt;p&gt;Make sure you have the same version of node and npm installed on your host machine.&lt;/p&gt;
+&lt;p&gt;We can use again a build script. Create build.sh inside a mips-modules&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;export BASEDIR=/home/fiore/Cross/linino/trunk
+export STAGING_DIR=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;BASEDIR&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/staging_dir
+
+V8SOURCE=/home/fiore/Cross/node/v8m-rb
+
+PREFIX=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;STAGING_DIR&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-
+
+LIBPATH=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;STAGING_DIR&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/lib/
+
+
+export AR=mips-openwrt-linux-uclibc-ar
+export CC=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;gcc
+export CXX=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;g++
+export AR=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;ar
+export RANLIB=&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;PREFIX&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;ranlib
+export LINK=&lt;span class="nv"&gt;$CXX&lt;/span&gt;
+
+export LDFLAGS=&amp;#39;-Wl,-rpath-link &amp;#39;&lt;span class="cp"&gt;${&lt;/span&gt;&lt;span class="n"&gt;LIBPATH&lt;/span&gt;&lt;span class="cp"&gt;}&lt;/span&gt;
+
+export TARGET_PATH=~/Cross/node/opt
+
+export GYPFLAGS=&amp;quot;-Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false&amp;quot;
+
+export npm_config_arch=mips
+# path to the node source that was used to create the cross-compiled version
+export npm_config_nodedir=/home/fiore/Cross/node/node-v0.10.20
+
+npm install $1
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now chmod +x build.sh and invoke it with the name of the module you need to build i.e.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;build&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sh&lt;/span&gt; &lt;span class="n"&gt;serialport&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Inside the ./node_modules folder, you will find the cross-compiled module and all its dependencies. Just move over everything via scp and you should be set. &lt;/p&gt;</summary><category term="arduino"></category><category term="yun"></category><category term="nodejs"></category></entry><entry><title>Interesting facts on the new Intel Galileo board</title><link href="http://fibasile.github.io/interesting-facts-on-intel-galileo.html" rel="alternate"></link><updated>2013-10-07T17:48:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-07:interesting-facts-on-intel-galileo.html</id><summary type="html">&lt;p&gt;The new Intel Galileo board is the first intel-based Arduino compatible board. I was given one during the Maker Faire Rome and today I spent some time checking the software and how it is programmed using Arduino.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt; How the Arduino IDE talks to the board &lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;First interesting fact: the board is interfaced with the Arduino IDE through serial ZModem transfer.&lt;/p&gt;
 &lt;p&gt;Digging into the ../Java/hardware/tools/x86 folder of the Arduino IDE downloaded for the board, you can find the toolchain and an upgrade.sh file. This is the file used by the Arduino IDE to upload sketches, compiled in elf format on the main PC and sent via

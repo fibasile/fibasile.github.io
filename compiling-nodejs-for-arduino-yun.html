@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>Compiling Node.js for Arduino YUN</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+
+    <!-- Optional theme -->
+    <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css"/> -->
+    
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/flatly.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/mediaicons.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/pygment.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/typogrify.css"/>
+    <style type="text/css" media="screen">
+	.err {
+		/** remove irritating red border from pygment code **/
+		border: none;
+	}
+    </style>
+    
+        <link href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="@fibasile Atom Feed" />
+        
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+   
+  </head>
+
+  <body>
+    <div class="container">
+        
+         <div class="row" >
+
+                <div class="col-xs-12 col-md-12">
+                     <div class="navbar navbar-inverse" role="navigation">
+                         <div class="container">
+                         <div class="navbard-header">
+                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                                         <span class="sr-only">Toggle navigation</span>
+                                         <span class="icon-bar"></span>
+                                         <span class="icon-bar"></span>
+                                         <span class="icon-bar"></span>
+                                       </button>
+                                  <a class="navbar-brand" href="http://fibasile.github.io/">@fibasile </a>
+                         </div>
+                           <div class="collapse navbar-collapse navbar-ex1-collapse">
+                              <ul class="nav navbar-nav">
+                                                                                                                <li><a href="http://fibasile.github.io/pages/about.html">About me</a></li>
+                                                                            <li><a href="http://fibasile.github.io/pages/projects.html">Projects</a></li>
+                                                                                                                                            </ul>
+                            </div>
+                            </div>
+                        </div>
+                </div>
+        </div>
+
+        <div class="row" >
+
+            <div class="col-xs-12 col-md-9">
+                    
+                                                   
+                        
+
+
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="http://fibasile.github.io/compiling-nodejs-for-arduino-yun.html" rel="bookmark"
+           title="Permalink to Compiling Node.js for Arduino YUN">Compiling Node.js for Arduino YUN</a></h1>
+      <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+      <footer class="post-info">
+
+<p>        <abbr class="published" title="2013-10-16T19:28:00">
+                Wed 16 October 2013
+        </abbr>
+
+        <!--               <address class="vcard author">
+                      By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
+              </address>
+               -->
+| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
+        <a href="http://fibasile.github.io/tag/arduino.html">
+        <span class="label label-default">arduino</span>
+        </a>
+        <a href="http://fibasile.github.io/tag/yun.html">
+        <span class="label label-default">yun</span>
+        </a>
+        <a href="http://fibasile.github.io/tag/nodejs.html">
+        <span class="label label-default">nodejs</span>
+        </a>
+         </p>
+
+
+</footer><!-- /.post-info -->      <p>Since few weeks I was looking for a web environment to develop an IDE for the YUN. I already compiled an avr toolchain but I was not happy with a python based app server, since it makes difficult to handle websockets in an async fashion and so. </p>
+<p>So I looked at cross compiling plain node.js for mips, but learnt that Big Endian is not supported by V8, the javascript engine on which node is based. This probably explains why OpenWRT is missing a package for node, while for example it is available on the Intel Galileo distribution.</p>
+<p>Luckily some folks had already done a set of patches for v8 and managed to compile node.js for the YUN processor. This tutorial is based on the patches available at: <a href="https://github.com/paul99/v8m-rb/pull/19">https://github.com/paul99/v8m-rb/pull/19</a></p>
+<p>This tutorial has been tested on Ubuntu 12.04. Make sure you have installed all the required packages for building the linino toolchain (see this <a href="http://forum.arduino.cc//index.php?topic=187938.0">thread</a>) plus the <code>gcc-multilib</code> package.</p>
+<p>1) Build the Linino toolchain, mine is located at <code>~/Cross/linino</code></p>
+<p>2) Create a work folder, mine is called <code>~/Cross/node</code>. Inside it checkout this patched v8 branch</p>
+<div class="highlight"><pre><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="o">:</span><span class="c1">//github.com/paul99/v8m-rb.git -b dm-dev-mipsbe</span>
+</pre></div>
+
+
+<p>3) Now build the v8 deps</p>
+<div class="highlight"><pre><span class="n">cd</span> <span class="n">v8m</span><span class="o">-</span><span class="n">rb</span>
+<span class="n">make</span> <span class="n">dependencies</span>
+</pre></div>
+
+
+<p>5) create the v8 build script script, i called it <code>build.sh</code> </p>
+<div class="highlight"><pre>STAGING_DIR=/home/fiore/Cross/linino/trunk/staging_dir
+PREFIX=<span class="nv">$STAGING_DIR</span>/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-
+
+export CC=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>gcc
+export CXX=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>g++
+export AR=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>ar
+export RANLIB=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>ranlib
+export LINK=<span class="nv">$CXX</span>
+LIBPATH=<span class="nv">$STAGING_DIR</span>/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/lib/
+export LDFLAGS=&#39;-Wl,-rpath-link &#39;<span class="cp">${</span><span class="n">LIBPATH</span><span class="cp">}</span>
+
+export GYPFLAGS=&quot;-Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false&quot;
+
+# build a standalone v8 version 
+# make mips.release library=shared  snapshot=off -j4
+
+# build the version for compiling node
+make mips.release library=shared  snapshot=off -j4
+</pre></div>
+
+
+<p>6) Make it executable and run it:</p>
+<div class="highlight"><pre><span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">build</span><span class="p">.</span><span class="n">sh</span> <span class="o">&amp;&amp;</span> <span class="p">.</span><span class="o">/</span><span class="n">build</span><span class="p">.</span><span class="n">sh</span>
+</pre></div>
+
+
+<p>7) now go on and download node-v0.10.20 source. Uncompress it in a folder with the same name within the work dir</p>
+<p>8) inside the created folder make a new script build.sh</p>
+<div class="highlight"><pre>export BASEDIR=/home/fiore/Cross/linino/trunk
+export STAGING_DIR=<span class="cp">${</span><span class="n">BASEDIR</span><span class="cp">}</span>/staging_dir
+
+V8SOURCE=/home/fiore/Cross/node/v8m-rb
+
+PREFIX=<span class="cp">${</span><span class="n">STAGING_DIR</span><span class="cp">}</span>/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-
+
+LIBPATH=<span class="cp">${</span><span class="n">STAGING_DIR</span><span class="cp">}</span>/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/lib/
+
+
+export AR=mips-openwrt-linux-uclibc-ar
+export CC=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>gcc
+export CXX=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>g++
+export AR=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>ar
+export RANLIB=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>ranlib
+export LINK=<span class="nv">$CXX</span>
+
+export LDFLAGS=&#39;-Wl,-rpath-link &#39;<span class="cp">${</span><span class="n">LIBPATH</span><span class="cp">}</span>
+
+export TARGET_PATH=~/Cross/node/opt
+
+export GYPFLAGS=&quot;-Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false&quot;
+make clean
+make distclean
+
+./configure --target=~/Cross/node/opt --without-snapshot --shared-v8 --shared-v8-includes=<span class="cp">${</span><span class="n">V8SOURCE</span><span class="cp">}</span>/include/ --shared-v8-libpath=<span class="cp">${</span><span class="n">V8SOURCE</span><span class="cp">}</span>/out/mips.release/lib.target/
+make snapshot=off -j4
+make install
+</pre></div>
+
+
+<p>9) Make it executable and run it:</p>
+<div class="highlight"><pre><span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">build</span><span class="p">.</span><span class="n">sh</span> <span class="o">&amp;&amp;</span> <span class="p">.</span><span class="o">/</span><span class="n">build</span><span class="p">.</span><span class="n">sh</span>
+</pre></div>
+
+
+<p>10) now you have both libv8 and node, and ready to copy them to the yun, but before make sure to strip them, and put them on the sdcard (both are around 8mb)</p>
+<div class="highlight"><pre><span class="n">cp</span> <span class="o">~/</span><span class="n">Cross</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">v8</span><span class="o">/</span><span class="n">out</span><span class="o">/</span><span class="n">mips</span><span class="p">.</span><span class="n">release</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">target</span><span class="o">/</span><span class="n">libv8</span><span class="p">.</span><span class="n">so</span> <span class="o">~/</span><span class="n">Cross</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">lib</span>
+
+<span class="n">mips</span><span class="o">-</span><span class="n">openwrt</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">strip</span> <span class="o">~/</span><span class="n">Cross</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libv8</span><span class="p">.</span><span class="n">so</span>
+<span class="n">mips</span><span class="o">-</span><span class="n">openwrt</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">strip</span> <span class="o">~/</span><span class="n">Cross</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">node</span>
+</pre></div>
+
+
+<p>10b) you might probably also need some other libs for example libstdc++, get them from the toolchain:</p>
+<div class="highlight"><pre><span class="n">cp</span> <span class="o">~/</span><span class="n">Cross</span><span class="o">/</span><span class="n">linino</span><span class="o">/</span><span class="n">trunk</span><span class="o">/</span><span class="n">staging_dir</span><span class="o">/</span><span class="n">toolchain</span><span class="o">-</span><span class="n">mips_r2_gcc</span><span class="o">-</span><span class="mf">4.6</span><span class="o">-</span><span class="n">linaro_uClibc</span><span class="o">-</span><span class="mf">0.9.33.2</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libstdc</span><span class="o">++</span><span class="p">.</span><span class="n">so</span><span class="mf">.6</span> <span class="o">~/</span><span class="n">Cross</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span>
+</pre></div>
+
+
+<p>11) Copy the nodejs-yun folder to the Yun</p>
+<div class="highlight"><pre><span class="n">scp</span> <span class="o">-</span><span class="n">r</span>  <span class="o">~/</span><span class="n">Cross</span><span class="o">/</span><span class="n">node</span><span class="o">/</span><span class="n">opt</span> <span class="n">root</span><span class="err">@</span><span class="n">arduino</span><span class="p">.</span><span class="n">local</span><span class="o">:/</span><span class="n">mnt</span><span class="o">/</span><span class="n">sda1</span>
+</pre></div>
+
+
+<p>11) Now go on the Yun and make some symlinks from your /mnt/sda1/opt to the system's root</p>
+<div class="highlight"><pre><span class="n">ln</span> <span class="o">-</span><span class="n">sf</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">sda1</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">node</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">node</span>
+<span class="n">ln</span> <span class="o">-</span><span class="n">sf</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">sda1</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">npm</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">npm</span>
+<span class="n">ln</span> <span class="o">-</span><span class="n">sf</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">sda1</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libv8</span><span class="p">.</span><span class="n">so</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libv8</span><span class="p">.</span><span class="n">so</span>
+<span class="n">ln</span> <span class="o">-</span><span class="n">sf</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">sda1</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libstdc</span><span class="o">++</span><span class="p">.</span><span class="n">so</span><span class="mf">.6</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libstdc</span><span class="o">++</span><span class="p">.</span><span class="n">so</span><span class="mf">.6</span>
+</pre></div>
+
+
+<p>12) Node is now ready, try it! </p>
+<p>13) YUN has limited memory you can optimize node for it with the following params:</p>
+<div class="highlight"><pre><span class="n">node</span> <span class="o">--</span><span class="n">stack_size</span><span class="o">=</span><span class="mi">1024</span> <span class="o">--</span><span class="n">max_old_space_size</span><span class="o">=</span><span class="mi">20</span> <span class="o">--</span><span class="n">max_new_space_size</span><span class="o">=</span><span class="mi">2048</span> <span class="o">--</span><span class="n">max_executable_size</span><span class="o">=</span><span class="mi">5</span> <span class="o">--</span><span class="n">gc_global</span> <span class="o">--</span><span class="n">gc_interval</span><span class="o">=</span><span class="mi">100</span>
+</pre></div>
+
+
+<p>13) Please note that since you don't have gcc on the Yun any npm module requiring compiling must be cross-compiled on your host machine.</p>
+<p>Make sure you have the same version of node and npm installed on your host machine.</p>
+<p>We can use again a build script. Create build.sh inside a mips-modules</p>
+<div class="highlight"><pre>export BASEDIR=/home/fiore/Cross/linino/trunk
+export STAGING_DIR=<span class="cp">${</span><span class="n">BASEDIR</span><span class="cp">}</span>/staging_dir
+
+V8SOURCE=/home/fiore/Cross/node/v8m-rb
+
+PREFIX=<span class="cp">${</span><span class="n">STAGING_DIR</span><span class="cp">}</span>/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/bin/mips-openwrt-linux-
+
+LIBPATH=<span class="cp">${</span><span class="n">STAGING_DIR</span><span class="cp">}</span>/toolchain-mips_r2_gcc-4.6-linaro_uClibc-0.9.33.2/lib/
+
+
+export AR=mips-openwrt-linux-uclibc-ar
+export CC=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>gcc
+export CXX=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>g++
+export AR=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>ar
+export RANLIB=<span class="cp">${</span><span class="n">PREFIX</span><span class="cp">}</span>ranlib
+export LINK=<span class="nv">$CXX</span>
+
+export LDFLAGS=&#39;-Wl,-rpath-link &#39;<span class="cp">${</span><span class="n">LIBPATH</span><span class="cp">}</span>
+
+export TARGET_PATH=~/Cross/node/opt
+
+export GYPFLAGS=&quot;-Dv8_use_mips_abi_hardfloat=false -Dv8_can_use_fpu_instructions=false&quot;
+
+export npm_config_arch=mips
+# path to the node source that was used to create the cross-compiled version
+export npm_config_nodedir=/home/fiore/Cross/node/node-v0.10.20
+
+npm install $1
+</pre></div>
+
+
+<p>Now chmod +x build.sh and invoke it with the name of the module you need to build i.e.</p>
+<div class="highlight"><pre><span class="p">.</span><span class="o">/</span><span class="n">build</span><span class="p">.</span><span class="n">sh</span> <span class="n">serialport</span>
+</pre></div>
+
+
+<p>Inside the ./node_modules folder, you will find the cross-compiled module and all its dependencies. Just move over everything via scp and you should be set. </p>
+    </div><!-- /.entry-content -->
+        <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_identifier = "compiling-nodejs-for-arduino-yun.html";
+        var disqus_url = "http://fibasile.github.io/compiling-nodejs-for-arduino-yun.html";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://fibasile.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    </div>
+    
+  </article>
+</section>
+                   
+        
+            </div>
+            
+            <div class="col-xs-12 col-md-3" style="padding-top: 50px">
+                 
+     
+        <div id="" class="panel panel-default">
+            <div class="panel-body">
+            <strong>Fiore Basile</strong>
+            <p><small>programmer, creative, entrepreneur based in Pisa, Italy
+            <a href="/pages/about.html">More...</a></small></p>
+            </div>
+        </div>
+     
+
+                                <ul class="list-group">
+                            <li class="list-group-item"><strong>Blogroll</strong></li>
+                                                    <li class="list-group-item"><a href="http://fablabstarter.com/">FabLab Starter</a></li>
+                                                    <li class="list-group-item"><a href="http://www.artigianatodigitale.com">Artigianato Digitale</a></li>
+                                                    <li class="list-group-item"><a href="http://leapleather.com">Leap Leather</a></li>
+                                                    <li class="list-group-item"><a href="http://woodyui.com">Woody UI</a></li>
+                                                </ul>
+
+        
+
+                        <div class="social">
+
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Social</strong></li>
+                            <li class="list-group-item"><a href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            
+                                                    <li class="list-group-item"><a href="https://twitter.com/fibasile">Twitter</a></li>
+                                                    <li class="list-group-item"><a href="https://github.com/fibasile">GitHub</a></li>
+                                                    <li class="list-group-item"><a href="http://www.linkedin.com/in/fibasile">LinkedIn</a></li>
+                                                </ul>
+                </div><!-- /.social -->
+                
+        
+        <div class="tags">
+            <ul  class="list-group">
+                  <li class="list-group-item"><strong>Tags</strong></li>
+                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/opensource.html">opensource</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/intel.html">intel</a></li>
+                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/arduino.html">arduino</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/pelican.html">pelican</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ardos.html">ardos</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/publishing.html">publishing</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/makerfaire.html">makerfaire</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/angularjs.html">angularjs</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/dropbox.html">dropbox</a></li>
+                                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/makers.html">makers</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/galileo.html">galileo</a></li>
+                                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/projects.html">projects</a></li>
+                                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/yun.html">yun</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/nodejs.html">nodejs</a></li>
+                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/python.html">python</a></li>
+                            </ul>
+            
+            
+        </div>
+            </div>
+        </div>
+        
+        <footer class="navbar navbar-default  navbar-bottom">
+            <div class="container">
+                <div class="navbar-text"><small>
+            &copy; 2013 Fiore Basile - Powered by <a href="http://getpelican.com" class="navbar-link">Pelican</a> - Custom theme built in <a href="http://getbootstrap.com" class="navbar-link">Bootstrap</a></small>
+            </div>
+            </div>
+        </footer>
+        
+        
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+     <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+       <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+       
+           <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-42131469-5']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+  </body>
+</html>
