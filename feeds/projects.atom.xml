@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/projects.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-11-01T18:20:00+01:00</updated><entry><title>Firmata-ObjC: controlling Arduino from ObjC Apps</title><link href="http://fibasile.github.io/firmata-objc-released.html" rel="alternate"></link><updated>2013-11-01T18:20:00+01:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-11-01:firmata-objc-released.html</id><summary type="html">&lt;p&gt;I'm releasing today a small wrapper framework and test program for Arduino Firmata protocol.&lt;/p&gt;
+&lt;p&gt;The project is hosted on github: &lt;a href="http://github.com/fibasile/Firmata-ObjC"&gt;http://github.com/fibasile/Firmata-ObjC&lt;/a&gt; and released with the MIT License.&lt;/p&gt;
+&lt;p&gt;Read on to learn more about it.&lt;/p&gt;
+&lt;h2&gt;About firmata&lt;/h2&gt;
+&lt;p&gt;The &lt;a href="http://firmata.org"&gt;firmata protocol&lt;/a&gt; was designed to allow programmers to control Arduino pins
+from any programming language running on a host system.&lt;/p&gt;
+&lt;p&gt;The latest 2.3 protocol version allows to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;discover pins available on the board&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;set pin modes to Analog, Input, Output, Servo and PWM&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;read input and output values&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Firmata protocol supports most of the Arduino variants, and can be easily installed to the board as it's distributed with the standard Arduino IDE.&lt;/p&gt;
+&lt;p&gt;To install it just fire the Arduino IDE and go to the File &amp;gt; Examples &amp;gt; Firmata &amp;gt; StandardFirmata menu&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Locating Firmata Sketch" src="/static/images/firmata-objc/firmata1.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;And then upload the firmata sketch using the right arrow.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Uploading the Firmata Sketch" src="/static/images/firmata-objc/firmata2.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;This basically provides a convenient way to write code for Arduino without ever changing the sketch uploaded to the board, and also to control your Arduino projects from your Mac.&lt;/p&gt;
+&lt;h2&gt;Getting started&lt;/h2&gt;
+&lt;p&gt;First of all you should download the framework and test project:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;clone&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt;&lt;span class="err"&gt;@&lt;/span&gt;&lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;fibasile&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Firmata&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;ObjC&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;git&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And ORSSerialPort submodule:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;cd&lt;/span&gt; &lt;span class="n"&gt;Firmata&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Objc&lt;/span&gt;
+&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;submodule&lt;/span&gt; &lt;span class="n"&gt;init&lt;/span&gt;
+&lt;span class="err"&gt;$&lt;/span&gt; &lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;submodule&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In the Mac/FirmataTestMac folder you will find the example project.&lt;/p&gt;
+&lt;p&gt;In the Library folder you will find the actual library files. You can drop these into your project to use the Library.&lt;/p&gt;
+&lt;p&gt;If you compile and run the FirmataTestMac you should get a window prompting for the serial connection parameters:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Connection options" src="/static/images/firmata-objc/firmata3.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;Choose the serial port where Arduino is plugged in, and the Standard Firmata 57600 baud rate. Please note you need to plug it before running the project. Hit connect, and after few seconds you should get the following window:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Detail" src="/static/images/firmata-objc/firmata4.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;This allows you to set the pin modes, change the values when Output mode is selected and so on.&lt;/p&gt;
+&lt;p&gt;To test everything works, set the pin D13 to Output and hit the button several times. You should see the LED on your arduino board flashing.&lt;/p&gt;
+&lt;p&gt;If it's not, check your serial port and baud rate settings (especially if other software is using it). Make sure you hit disconnect in the first window when you quit so you don't leave the serial port locked.&lt;/p&gt;
+&lt;h2&gt;Using Firmata-ObjC in your project&lt;/h2&gt;
+&lt;p&gt;Since you need to communicate with the board using a serial port, in the deps folder the ORSSerialPort framework allows to access the unix-like serial port of your Mac.&lt;/p&gt;
+&lt;p&gt;This adds an additional dependency, you should include the &lt;code&gt;IOKit.framework&lt;/code&gt; into your project to make it work.&lt;/p&gt;
+&lt;p&gt;Take a look at the test program to see an example.&lt;/p&gt;
+&lt;p&gt;The framework is structured around the &lt;code&gt;ADArduino&lt;/code&gt; class, which needs a ADUnixSerialPort to be initialized, so you will write something like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ADUnixSerialPort&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="n"&gt;ADUnixSerialPort&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;initWithDevice&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="n"&gt;baudRate&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;baud&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="n"&gt;ADArduino&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;arduino&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="n"&gt;ADArduino&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="n"&gt;initWithSerial&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The &lt;code&gt;ADArduino&lt;/code&gt; class needs to query the Firmata sketch on the board to know which pins are available, which protocol version is used and so on. This is done using a block based callback:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;__block&lt;/span&gt; &lt;span class="n"&gt;ADArduino&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;_warduino&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;arduino&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;arduino&lt;/span&gt; &lt;span class="n"&gt;connectWithBlock&lt;/span&gt;&lt;span class="o"&gt;:^&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+
+       &lt;span class="n"&gt;NSLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;@&amp;quot;Arduino connected&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+       &lt;span class="n"&gt;NSLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;@&amp;quot;Arduino Firmata version %@ %@&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,[&lt;/span&gt;&lt;span class="n"&gt;_warduino&lt;/span&gt; &lt;span class="n"&gt;firmataVersion&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;_warduino&lt;/span&gt; &lt;span class="n"&gt;firmataVersionString&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+
+       &lt;span class="n"&gt;NSLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;@&amp;quot;Analog pins %@&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_warduino&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;analogPins&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+       &lt;span class="n"&gt;NSLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;@&amp;quot;Digital pins %@&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_warduino&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;digitalPins&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+       &lt;span class="c1"&gt;// now you can update the gui and start sending messages&lt;/span&gt;
+   &lt;span class="p"&gt;}];&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;After this initialization is complete you can access the pins in the &lt;code&gt;analogPins&lt;/code&gt; and &lt;code&gt;digitalPins&lt;/code&gt; properties.
+All pins are instances of the &lt;code&gt;ADArduinoPin&lt;/code&gt; class, which provides the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;number: the number of the pin (for the digital pins)&lt;/li&gt;
+&lt;li&gt;isAnalogPin: true if it's one of the analog capable A0-Ax pins&lt;/li&gt;
+&lt;li&gt;analog_channel: the pin number for analog pins&lt;/li&gt;
+&lt;li&gt;mode: a numeric property to change the mode using the constants (MODE_INPUT, MODE_OUTPUT, etc)&lt;/li&gt;
+&lt;li&gt;currentMode: a string description of the current pin mode&lt;/li&gt;
+&lt;li&gt;availableModes: an array of strings describing the supported modes for the pin (Analog,Input,Output,Servo,PWM)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For example to set the D13 pin to Output and On one would do:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ADArduinoPin&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;pin&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;arduino&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;digitalPins&lt;/span&gt; &lt;span class="n"&gt;objectAtIndex&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="n"&gt;pin&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MODE_OUTPUT&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;pin&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;that's it!&lt;/p&gt;
+&lt;p&gt;When finished with the Arduino board, in order to unlock the serial port, it's necessary to call:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;arduino&lt;/span&gt; &lt;span class="n"&gt;stopListening&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The Firmata-ObjC Framework makes it finally easy to establish a communication between Arduino and the Mac apps.&lt;/p&gt;
+&lt;p&gt;I plan to add support for other communication channels, namely Bluetooth Low Energy, Bluetooth 2.0, Wifi and Ethernet Shields.&lt;/p&gt;
+&lt;p&gt;The first should be quite easy and will allow to port the framework to the iOS devices supporting BLE.&lt;/p&gt;
+&lt;p&gt;Hope you find the framework useful for your projects. Open an issue on GitHub if you find any problems.&lt;/p&gt;</summary><category term="objc"></category><category term="firmata"></category><category term="arduino"></category></entry></feed>

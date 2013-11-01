@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>Getting Started with Arduino YUN</title>
+    <title>Firmata-ObjC: controlling Arduino from ObjC Apps</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
@@ -73,28 +73,28 @@
   <article>
     <header>
       <h1 class="entry-title">
-        <a href="http://fibasile.github.io/arduino-yun-getting-started.html" rel="bookmark"
-           title="Permalink to Getting Started with Arduino YUN">Getting Started with Arduino YUN</a></h1>
+        <a href="http://fibasile.github.io/firmata-objc-released.html" rel="bookmark"
+           title="Permalink to Firmata-ObjC: controlling Arduino from ObjC Apps">Firmata-ObjC: controlling Arduino from ObjC Apps</a></h1>
       <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
     </header>
 
     <div class="entry-content">
       <footer class="post-info">
 
-<p>        <abbr class="published" title="2013-09-13T13:20:00">
-                Fri 13 September 2013
+<p>        <abbr class="published" title="2013-11-01T18:20:00">
+                Fri 01 November 2013
         </abbr>
 
         <!--               <address class="vcard author">
                       By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
               </address>
                -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-        <a href="http://fibasile.github.io/tag/projects.html">
-        <span class="label label-default">projects</span>
+| Category: <a href="http://fibasile.github.io/category/projects.html">projects</a> |     <span class="glyphicon glyphicon-tag"></span>
+        <a href="http://fibasile.github.io/tag/objc.html">
+        <span class="label label-default">objc</span>
         </a>
-        <a href="http://fibasile.github.io/tag/opensource.html">
-        <span class="label label-default">opensource</span>
+        <a href="http://fibasile.github.io/tag/firmata.html">
+        <span class="label label-default">firmata</span>
         </a>
         <a href="http://fibasile.github.io/tag/arduino.html">
         <span class="label label-default">arduino</span>
@@ -102,61 +102,112 @@
          </p>
 
 
-</footer><!-- /.post-info -->      <p>I just received my <a href="http://arduino.cc/en/Main/ArduinoBoardYun?from=Main.ArduinoYUN">Arduino YUN</a>, a new product from <a href="http://arduino.cc">Officine Arduino</a> bridging the gap between microcontrollers and embedded Linux devices.</p>
-<p>The YUN packs in the form factor both devices, also adding USB, Wifi, Ethernet connectivity.</p>
-<p>I think many people willing to buy it could find interesting to learn how it works, and also some newbies could need some help to get started using it, so here's a quick guide of the steps to follow to get the YUN configured using a WiFi network connection: </p>
-<p>1) plug the mini-USB port on the YUN to your computer or to a usb-compatible charger using a mini-USB cable</p>
-<p><img alt="00 Plug" src="static/images/yun-getting-started/00-plug.jpg" /></p>
-<p>2) go to your wifi-enabled computer, and after few seconds you should find a Arduino-YUN-XXX network you can connect to</p>
-<p>3) Once you joined the network, fire up your web browser and visit http://arduino.local, you will be presented with the following screen</p>
-<p><img alt="01 Login" src="static/images/yun-getting-started/01-login.png" /></p>
-<p>4) Type the default password which is "arduino"</p>
-<p>5) The following screen will show you the current network status, telling you if you're connected via wifi or ethernet. </p>
-<p><img alt="02 Welcome" src="static/images/yun-getting-started/02-welcome.png" /></p>
-<p>6) Now hit the configure button. At this point you will be prompted with a new screen, allowing to configure your password, it should be at least 8 chars long</p>
-<p><img alt="03 Password" src="static/images/yun-getting-started/03-password.png" /></p>
-<p>7) Scroll down, and configure access to you existing wireless network. Choose from the selection your network name, the kind of encryption you are using (most common is WPA) and the password you usually set to access your network.</p>
-<p><img alt="04 Wifi" src="static/images/yun-getting-started/04-wifi.png" /></p>
-<p>8) On the bottom of the page you are able to set a protection on access to sketches from the REST interface. If you don't know what this means, and in any case, it is safe to set this to "With password". </p>
-<p><img alt="05 Rest" src="static/images/yun-getting-started/05-rest.png" /></p>
-<p>9) Hit configure and restart. Now you can switch back to your existing wifi connection. If you did set your config data correctly the Arduino YUN should be again reachable using the http://arduino.local address, asking for the password you did set up at step 6).</p>
-<p><img alt="06 Restart" src="static/images/yun-getting-started/06-restart.png" /></p>
-<p>10) Optional - If you plan to access your Arduino YUN using ssh, I recommend to set up private key based login instead of plain old passwords: not only it is more secure (your password might be guessed, but nobody will be able to guess your private key), but more
-practical so you don't have to type the password every time.</p>
-<p>If you want to set it, just hit Configure on the main screen shown after inserting the password, when a new page loads, on the top of the page you will now select "advanced configuration panel", select it and you will be presented with the Administration panel:</p>
-<p>Now select the System menu and the Administration option. You will be presented with a new form, allowing also to change the system password. </p>
-<p><img alt="07 Admin" src="static/images/yun-getting-started/07-admin.png" /></p>
-<p>Now scroll down to SSH Keys, and paste in your SSH Certificate, then hit "Save and Apply". If you don't have one you can follow <a href="https://help.github.com/articles/generating-ssh-keys">this tutorial</a> to generate one. At the end you should come up with something like</p>
-<div class="highlight"><pre><span class="n">ssh</span><span class="o">-</span><span class="n">rsa</span> <span class="n">AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom</span><span class="o">/</span><span class="n">BWDSU</span>
-<span class="n">GPl</span><span class="o">+</span><span class="n">nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3</span>
-<span class="n">Pbv7kOdJ</span><span class="o">/</span><span class="n">MTyBlWXFCR</span><span class="o">+</span><span class="n">HAo3FXRitBqxiX1nKhXpHAZsMciLq8V6RjsNAQwdsdMFvSlVK</span><span class="o">/</span><span class="mi">7</span><span class="n">XA</span>
-<span class="n">t3FaoJoAsncM1Q9x5</span><span class="o">+</span><span class="mi">3</span><span class="n">V0Ww68</span><span class="o">/</span><span class="n">eIFmb1zuUFljQJKprrX88XypNDvjYNby6vw</span><span class="o">/</span><span class="n">Pb0rwert</span><span class="o">/</span><span class="n">En</span>
-<span class="n">mZ</span><span class="o">+</span><span class="n">AW4OZPnTPI89ZPmVMLuayrD2cE86Z</span><span class="o">/</span><span class="n">il8b</span><span class="o">+</span><span class="n">gw3r3</span><span class="o">+</span><span class="mi">1</span><span class="n">nKatmIkjn2so1d01QraTlMqVSsbx</span>
-<span class="n">NrRFi9wrf</span><span class="o">+</span><span class="n">M7Q</span><span class="o">==</span> <span class="n">schacon</span><span class="err">@</span><span class="n">agadorlaptop</span><span class="p">.</span><span class="n">local</span>
+</footer><!-- /.post-info -->      <p>I'm releasing today a small wrapper framework and test program for Arduino Firmata protocol.</p>
+<p>The project is hosted on github: <a href="http://github.com/fibasile/Firmata-ObjC">http://github.com/fibasile/Firmata-ObjC</a> and released with the MIT License.</p>
+<p>Read on to learn more about it.</p>
+<h2>About firmata</h2>
+<p>The <a href="http://firmata.org">firmata protocol</a> was designed to allow programmers to control Arduino pins
+from any programming language running on a host system.</p>
+<p>The latest 2.3 protocol version allows to:</p>
+<ul>
+<li>
+<p>discover pins available on the board</p>
+</li>
+<li>
+<p>set pin modes to Analog, Input, Output, Servo and PWM</p>
+</li>
+<li>
+<p>read input and output values</p>
+</li>
+</ul>
+<p>The Firmata protocol supports most of the Arduino variants, and can be easily installed to the board as it's distributed with the standard Arduino IDE.</p>
+<p>To install it just fire the Arduino IDE and go to the File &gt; Examples &gt; Firmata &gt; StandardFirmata menu</p>
+<p><img alt="Locating Firmata Sketch" src="/static/images/firmata-objc/firmata1.jpg" /></p>
+<p>And then upload the firmata sketch using the right arrow.</p>
+<p><img alt="Uploading the Firmata Sketch" src="/static/images/firmata-objc/firmata2.jpg" /></p>
+<p>This basically provides a convenient way to write code for Arduino without ever changing the sketch uploaded to the board, and also to control your Arduino projects from your Mac.</p>
+<h2>Getting started</h2>
+<p>First of all you should download the framework and test project:</p>
+<div class="highlight"><pre><span class="err">$</span> <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="err">@</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">:</span><span class="n">fibasile</span><span class="o">/</span><span class="n">Firmata</span><span class="o">-</span><span class="n">ObjC</span><span class="p">.</span><span class="n">git</span>
 </pre></div>
 
 
-<p>that you can copy and paste in the textarea. </p>
-<p><img alt="08 Ssh" src="static/images/yun-getting-started/08-ssh.png" /></p>
-<p>Once you are done, and applied the change you can try (depending on your platform) to ssh to the YUN using</p>
-<p><code>ssh root@arduino.local</code></p>
-<p>if the command doesn't ask you for a password, you are set up, and can move on to step 12. If it doesn't check you followed the instruction or ask for help to a friend or in a Linux forum.  </p>
-<p>12) If your passwordless ssh worked you can now disable password-based access to the YUN. Go back to the System &gt; Administration menu item, under the SSH Access header and uncheck the following checkfields</p>
-<p><img alt="09 Ssh2" src="static/images/yun-getting-started/09-ssh2.png" /></p>
-<p>apply your changes, and you are done.</p>
-<p>13) Where to go from here: </p>
+<p>And ORSSerialPort submodule:</p>
+<div class="highlight"><pre><span class="err">$</span> <span class="n">cd</span> <span class="n">Firmata</span><span class="o">-</span><span class="n">Objc</span>
+<span class="err">$</span> <span class="n">git</span> <span class="n">submodule</span> <span class="n">init</span>
+<span class="err">$</span> <span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span>
+</pre></div>
+
+
+<p>In the Mac/FirmataTestMac folder you will find the example project.</p>
+<p>In the Library folder you will find the actual library files. You can drop these into your project to use the Library.</p>
+<p>If you compile and run the FirmataTestMac you should get a window prompting for the serial connection parameters:</p>
+<p><img alt="Connection options" src="/static/images/firmata-objc/firmata3.jpg" /></p>
+<p>Choose the serial port where Arduino is plugged in, and the Standard Firmata 57600 baud rate. Please note you need to plug it before running the project. Hit connect, and after few seconds you should get the following window:</p>
+<p><img alt="Detail" src="/static/images/firmata-objc/firmata4.jpg" /></p>
+<p>This allows you to set the pin modes, change the values when Output mode is selected and so on.</p>
+<p>To test everything works, set the pin D13 to Output and hit the button several times. You should see the LED on your arduino board flashing.</p>
+<p>If it's not, check your serial port and baud rate settings (especially if other software is using it). Make sure you hit disconnect in the first window when you quit so you don't leave the serial port locked.</p>
+<h2>Using Firmata-ObjC in your project</h2>
+<p>Since you need to communicate with the board using a serial port, in the deps folder the ORSSerialPort framework allows to access the unix-like serial port of your Mac.</p>
+<p>This adds an additional dependency, you should include the <code>IOKit.framework</code> into your project to make it work.</p>
+<p>Take a look at the test program to see an example.</p>
+<p>The framework is structured around the <code>ADArduino</code> class, which needs a ADUnixSerialPort to be initialized, so you will write something like:</p>
+<div class="highlight"><pre><span class="n">ADUnixSerialPort</span><span class="o">*</span> <span class="n">port</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ADUnixSerialPort</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">initWithDevice</span><span class="o">:</span><span class="n">path</span> <span class="n">baudRate</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">baud</span> <span class="n">timeout</span><span class="o">:</span><span class="mi">3</span><span class="p">];</span>
+<span class="n">ADArduino</span><span class="o">*</span> <span class="n">arduino</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ADArduino</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">initWithSerial</span><span class="o">:</span><span class="n">port</span><span class="p">];</span>
+</pre></div>
+
+
+<p>The <code>ADArduino</code> class needs to query the Firmata sketch on the board to know which pins are available, which protocol version is used and so on. This is done using a block based callback:</p>
+<div class="highlight"><pre><span class="n">__block</span> <span class="n">ADArduino</span><span class="o">*</span> <span class="n">_warduino</span> <span class="o">=</span> <span class="n">arduino</span><span class="p">;</span>
+<span class="p">[</span><span class="n">arduino</span> <span class="n">connectWithBlock</span><span class="o">:^</span><span class="p">{</span>
+
+       <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Arduino connected&quot;</span><span class="p">);</span>
+       <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Arduino Firmata version %@ %@&quot;</span><span class="p">,[</span><span class="n">_warduino</span> <span class="n">firmataVersion</span><span class="p">],</span> <span class="p">[</span><span class="n">_warduino</span> <span class="n">firmataVersionString</span><span class="p">]);</span>
+
+       <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Analog pins %@&quot;</span><span class="p">,</span> <span class="n">_warduino</span><span class="p">.</span><span class="n">analogPins</span><span class="p">);</span>
+       <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Digital pins %@&quot;</span><span class="p">,</span> <span class="n">_warduino</span><span class="p">.</span><span class="n">digitalPins</span><span class="p">);</span>
+
+       <span class="c1">// now you can update the gui and start sending messages</span>
+   <span class="p">}];</span>
+</pre></div>
+
+
+<p>After this initialization is complete you can access the pins in the <code>analogPins</code> and <code>digitalPins</code> properties.
+All pins are instances of the <code>ADArduinoPin</code> class, which provides the following:</p>
 <ul>
-<li>check out the <a href="http://arduino.cc/en/Tutorial/Bridge">Bridge Library</a> to interact with the digital and analog pins via the web interface</li>
-<li>take a look at the <a href="http://arduino.cc/en/Tutorial/HomePage">Bridge Library examples</a> to learn how you can call Linux-side commands via Arduino Sketches</li>
+<li>number: the number of the pin (for the digital pins)</li>
+<li>isAnalogPin: true if it's one of the analog capable A0-Ax pins</li>
+<li>analog_channel: the pin number for analog pins</li>
+<li>mode: a numeric property to change the mode using the constants (MODE_INPUT, MODE_OUTPUT, etc)</li>
+<li>currentMode: a string description of the current pin mode</li>
+<li>availableModes: an array of strings describing the supported modes for the pin (Analog,Input,Output,Servo,PWM)</li>
 </ul>
-<p>I hope you found this useful, if so I'll write more tutorials on the features offered by the Administration panel. Have fun with your YUN!</p>
+<p>For example to set the D13 pin to Output and On one would do:</p>
+<div class="highlight"><pre><span class="n">ADArduinoPin</span> <span class="o">*</span><span class="n">pin</span> <span class="o">=</span> <span class="p">[</span><span class="n">arduino</span><span class="p">.</span><span class="n">digitalPins</span> <span class="n">objectAtIndex</span><span class="o">:</span><span class="mi">13</span><span class="p">];</span>
+<span class="n">pin</span><span class="p">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">MODE_OUTPUT</span><span class="p">;</span>
+<span class="n">pin</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+
+
+<p>that's it!</p>
+<p>When finished with the Arduino board, in order to unlock the serial port, it's necessary to call:</p>
+<div class="highlight"><pre><span class="p">[</span><span class="n">arduino</span> <span class="n">stopListening</span><span class="p">];</span>
+</pre></div>
+
+
+<h2>Conclusion</h2>
+<p>The Firmata-ObjC Framework makes it finally easy to establish a communication between Arduino and the Mac apps.</p>
+<p>I plan to add support for other communication channels, namely Bluetooth Low Energy, Bluetooth 2.0, Wifi and Ethernet Shields.</p>
+<p>The first should be quite easy and will allow to port the framework to the iOS devices supporting BLE.</p>
+<p>Hope you find the framework useful for your projects. Open an issue on GitHub if you find any problems.</p>
     </div><!-- /.entry-content -->
         <div class="comments">
       <h2>Comments !</h2>
       <div id="disqus_thread"></div>
       <script type="text/javascript">
-        var disqus_identifier = "arduino-yun-getting-started.html";
-        var disqus_url = "http://fibasile.github.io/arduino-yun-getting-started.html";
+        var disqus_identifier = "firmata-objc-released.html";
+        var disqus_url = "http://fibasile.github.io/firmata-objc-released.html";
         (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = 'http://fibasile.disqus.com/embed.js';
