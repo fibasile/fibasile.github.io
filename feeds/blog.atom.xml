@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/blog.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-10-16T19:28:00+02:00</updated><entry><title>Compiling Node.js for Arduino YUN</title><link href="http://fibasile.github.io/compiling-nodejs-for-arduino-yun.html" rel="alternate"></link><updated>2013-10-16T19:28:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-16:compiling-nodejs-for-arduino-yun.html</id><summary type="html">&lt;p&gt;Since few weeks I was looking for a web environment to develop an IDE for the YUN. I already compiled an avr toolchain but I was not happy with a python based app server, since it makes difficult to handle websockets in an async fashion and so. &lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>@fibasile</title><link href="http://fibasile.github.io/" rel="alternate"></link><link href="http://fibasile.github.io/feeds/blog.atom.xml" rel="self"></link><id>http://fibasile.github.io/</id><updated>2013-10-29T18:00:00+01:00</updated><entry><title>Slides from my iOS accessory BLE Talk</title><link href="http://fibasile.github.io/ble-workshop-slides.html" rel="alternate"></link><updated>2013-10-29T18:00:00+01:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-29:ble-workshop-slides.html</id><summary type="html">&lt;p&gt;Here you can find the deck for my talk during #Pragma mark conference 2013.&lt;/p&gt;
+&lt;p&gt;The conference was very interesting and fun. I'm also happy lots of people showed up during the talk. &lt;/p&gt;
+&lt;p&gt;The slides are in italian, but code should be easy to understand for iOS developers.&lt;/p&gt;
+&lt;iframe src="http://www.slideshare.net/slideshow/embed_code/27685473?startSlide=2" width="512" height="421" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen&gt; &lt;/iframe&gt;
+
+&lt;p&gt;&lt;div style="margin-bottom:5px"&gt; &lt;strong&gt; &lt;a href="https://www.slideshare.net/fibasile/realizzare-accessori-ios-con-bluetooth-low-energy-e-arduino" title="Realizzare Accessori iOS con Bluetooth Low Energy e Arduino" target="_blank"&gt;Realizzare Accessori iOS con Bluetooth Low Energy e Arduino&lt;/a&gt; &lt;/strong&gt; from &lt;strong&gt;&lt;a href="http://www.slideshare.net/fibasile" target="_blank"&gt;fibasile&lt;/a&gt;&lt;/strong&gt; &lt;/div&gt;&lt;/p&gt;</summary><category term="arduino"></category><category term="ios"></category><category term="ble"></category></entry><entry><title>Compiling Node.js for Arduino YUN</title><link href="http://fibasile.github.io/compiling-nodejs-for-arduino-yun.html" rel="alternate"></link><updated>2013-10-16T19:28:00+02:00</updated><author><name>Fiore Basile</name></author><id>tag:fibasile.github.io,2013-10-16:compiling-nodejs-for-arduino-yun.html</id><summary type="html">&lt;p&gt;Since few weeks I was looking for a web environment to develop an IDE for the YUN. I already compiled an avr toolchain but I was not happy with a python based app server, since it makes difficult to handle websockets in an async fashion and so. &lt;/p&gt;
 &lt;p&gt;So I looked at cross compiling plain node.js for mips, but learnt that Big Endian is not supported by V8, the javascript engine on which node is based. This probably explains why OpenWRT is missing a package for node, while for example it is available on the Intel Galileo distribution.&lt;/p&gt;
 &lt;p&gt;Luckily some folks had already done a set of patches for v8 and managed to compile node.js for the YUN processor. This tutorial is based on the patches available at: &lt;a href="https://github.com/paul99/v8m-rb/pull/19"&gt;https://github.com/paul99/v8m-rb/pull/19&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;This tutorial has been tested on Ubuntu 12.04. Make sure you have installed all the required packages for building the linino toolchain (see this &lt;a href="http://forum.arduino.cc//index.php?topic=187938.0"&gt;thread&lt;/a&gt;) plus the &lt;code&gt;gcc-multilib&lt;/code&gt; package.&lt;/p&gt;
@@ -346,26 +351,26 @@ located at &lt;a href="http://download.linino.org/dogstick/all-in-one/latest/"&g
 &lt;p&gt;The YUN packs in the form factor both devices, also adding USB, Wifi, Ethernet connectivity.&lt;/p&gt;
 &lt;p&gt;I think many people willing to buy it could find interesting to learn how it works, and also some newbies could need some help to get started using it, so here's a quick guide of the steps to follow to get the YUN configured using a WiFi network connection: &lt;/p&gt;
 &lt;p&gt;1) plug the mini-USB port on the YUN to your computer or to a usb-compatible charger using a mini-USB cable&lt;/p&gt;
-&lt;p&gt;&lt;img alt="00 Plug" src="static/images/yun-getting-started/00-plug.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="00 Plug" src="images/yun-getting-started/00-plug.jpg" /&gt;&lt;/p&gt;
 &lt;p&gt;2) go to your wifi-enabled computer, and after few seconds you should find a Arduino-YUN-XXX network you can connect to&lt;/p&gt;
 &lt;p&gt;3) Once you joined the network, fire up your web browser and visit http://arduino.local, you will be presented with the following screen&lt;/p&gt;
-&lt;p&gt;&lt;img alt="01 Login" src="static/images/yun-getting-started/01-login.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="01 Login" src="images/yun-getting-started/01-login.png" /&gt;&lt;/p&gt;
 &lt;p&gt;4) Type the default password which is "arduino"&lt;/p&gt;
 &lt;p&gt;5) The following screen will show you the current network status, telling you if you're connected via wifi or ethernet. &lt;/p&gt;
-&lt;p&gt;&lt;img alt="02 Welcome" src="static/images/yun-getting-started/02-welcome.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="02 Welcome" src="images/yun-getting-started/02-welcome.png" /&gt;&lt;/p&gt;
 &lt;p&gt;6) Now hit the configure button. At this point you will be prompted with a new screen, allowing to configure your password, it should be at least 8 chars long&lt;/p&gt;
-&lt;p&gt;&lt;img alt="03 Password" src="static/images/yun-getting-started/03-password.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="03 Password" src="images/yun-getting-started/03-password.png" /&gt;&lt;/p&gt;
 &lt;p&gt;7) Scroll down, and configure access to you existing wireless network. Choose from the selection your network name, the kind of encryption you are using (most common is WPA) and the password you usually set to access your network.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="04 Wifi" src="static/images/yun-getting-started/04-wifi.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="04 Wifi" src="images/yun-getting-started/04-wifi.png" /&gt;&lt;/p&gt;
 &lt;p&gt;8) On the bottom of the page you are able to set a protection on access to sketches from the REST interface. If you don't know what this means, and in any case, it is safe to set this to "With password". &lt;/p&gt;
-&lt;p&gt;&lt;img alt="05 Rest" src="static/images/yun-getting-started/05-rest.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="05 Rest" src="images/yun-getting-started/05-rest.png" /&gt;&lt;/p&gt;
 &lt;p&gt;9) Hit configure and restart. Now you can switch back to your existing wifi connection. If you did set your config data correctly the Arduino YUN should be again reachable using the http://arduino.local address, asking for the password you did set up at step 6).&lt;/p&gt;
-&lt;p&gt;&lt;img alt="06 Restart" src="static/images/yun-getting-started/06-restart.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="06 Restart" src="images/yun-getting-started/06-restart.png" /&gt;&lt;/p&gt;
 &lt;p&gt;10) Optional - If you plan to access your Arduino YUN using ssh, I recommend to set up private key based login instead of plain old passwords: not only it is more secure (your password might be guessed, but nobody will be able to guess your private key), but more
 practical so you don't have to type the password every time.&lt;/p&gt;
 &lt;p&gt;If you want to set it, just hit Configure on the main screen shown after inserting the password, when a new page loads, on the top of the page you will now select "advanced configuration panel", select it and you will be presented with the Administration panel:&lt;/p&gt;
 &lt;p&gt;Now select the System menu and the Administration option. You will be presented with a new form, allowing also to change the system password. &lt;/p&gt;
-&lt;p&gt;&lt;img alt="07 Admin" src="static/images/yun-getting-started/07-admin.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="07 Admin" src="images/yun-getting-started/07-admin.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Now scroll down to SSH Keys, and paste in your SSH Certificate, then hit "Save and Apply". If you don't have one you can follow &lt;a href="https://help.github.com/articles/generating-ssh-keys"&gt;this tutorial&lt;/a&gt; to generate one. At the end you should come up with something like&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ssh&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rsa&lt;/span&gt; &lt;span class="n"&gt;AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;BWDSU&lt;/span&gt;
 &lt;span class="n"&gt;GPl&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3&lt;/span&gt;
@@ -377,12 +382,12 @@ practical so you don't have to type the password every time.&lt;/p&gt;
 
 
 &lt;p&gt;that you can copy and paste in the textarea. &lt;/p&gt;
-&lt;p&gt;&lt;img alt="08 Ssh" src="static/images/yun-getting-started/08-ssh.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="08 Ssh" src="images/yun-getting-started/08-ssh.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Once you are done, and applied the change you can try (depending on your platform) to ssh to the YUN using&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;ssh root@arduino.local&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;if the command doesn't ask you for a password, you are set up, and can move on to step 12. If it doesn't check you followed the instruction or ask for help to a friend or in a Linux forum.  &lt;/p&gt;
 &lt;p&gt;12) If your passwordless ssh worked you can now disable password-based access to the YUN. Go back to the System &amp;gt; Administration menu item, under the SSH Access header and uncheck the following checkfields&lt;/p&gt;
-&lt;p&gt;&lt;img alt="09 Ssh2" src="static/images/yun-getting-started/09-ssh2.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="09 Ssh2" src="images/yun-getting-started/09-ssh2.png" /&gt;&lt;/p&gt;
 &lt;p&gt;apply your changes, and you are done.&lt;/p&gt;
 &lt;p&gt;13) Where to go from here: &lt;/p&gt;
 &lt;ul&gt;

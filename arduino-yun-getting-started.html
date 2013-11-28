@@ -25,8 +25,8 @@
 	}
     </style>
     
-        <link href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="@fibasile Atom Feed" />
-        
+    <link href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="@fibasile Atom Feed" />
+
     <!--[if IE]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -52,9 +52,9 @@
                          </div>
                            <div class="collapse navbar-collapse navbar-ex1-collapse">
                               <ul class="nav navbar-nav">
-                                                                                                                <li><a href="http://fibasile.github.io/pages/about.html">About me</a></li>
-                                                                            <li><a href="http://fibasile.github.io/pages/projects.html">Projects</a></li>
-                                                                                                                                            </ul>
+                                        <li><a href="http://fibasile.github.io/pages/about.html">About me</a></li>
+                                        <li><a href="http://fibasile.github.io/pages/projects.html">Projects</a></li>
+                                </ul>
                             </div>
                             </div>
                         </div>
@@ -65,8 +65,8 @@
 
             <div class="col-xs-12 col-md-9">
                     
-                                                   
-                        
+                   
+
 
 
 <section id="content" class="body">
@@ -75,11 +75,11 @@
       <h1 class="entry-title">
         <a href="http://fibasile.github.io/arduino-yun-getting-started.html" rel="bookmark"
            title="Permalink to Getting Started with Arduino YUN">Getting Started with Arduino YUN</a></h1>
-      <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
     </header>
 
     <div class="entry-content">
-      <footer class="post-info">
+<footer class="post-info">
 
 <p>        <abbr class="published" title="2013-09-13T13:20:00">
                 Fri 13 September 2013
@@ -88,44 +88,44 @@
         <!--               <address class="vcard author">
                       By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
               </address>
-               -->
+ -->
 | Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-        <a href="http://fibasile.github.io/tag/projects.html">
+    <a href="http://fibasile.github.io/tag/projects.html">
         <span class="label label-default">projects</span>
         </a>
-        <a href="http://fibasile.github.io/tag/opensource.html">
+    <a href="http://fibasile.github.io/tag/opensource.html">
         <span class="label label-default">opensource</span>
         </a>
-        <a href="http://fibasile.github.io/tag/arduino.html">
+    <a href="http://fibasile.github.io/tag/arduino.html">
         <span class="label label-default">arduino</span>
         </a>
-         </p>
+ </p>
 
 
 </footer><!-- /.post-info -->      <p>I just received my <a href="http://arduino.cc/en/Main/ArduinoBoardYun?from=Main.ArduinoYUN">Arduino YUN</a>, a new product from <a href="http://arduino.cc">Officine Arduino</a> bridging the gap between microcontrollers and embedded Linux devices.</p>
 <p>The YUN packs in the form factor both devices, also adding USB, Wifi, Ethernet connectivity.</p>
 <p>I think many people willing to buy it could find interesting to learn how it works, and also some newbies could need some help to get started using it, so here's a quick guide of the steps to follow to get the YUN configured using a WiFi network connection: </p>
 <p>1) plug the mini-USB port on the YUN to your computer or to a usb-compatible charger using a mini-USB cable</p>
-<p><img alt="00 Plug" src="static/images/yun-getting-started/00-plug.jpg" /></p>
+<p><img alt="00 Plug" src="images/yun-getting-started/00-plug.jpg" /></p>
 <p>2) go to your wifi-enabled computer, and after few seconds you should find a Arduino-YUN-XXX network you can connect to</p>
 <p>3) Once you joined the network, fire up your web browser and visit http://arduino.local, you will be presented with the following screen</p>
-<p><img alt="01 Login" src="static/images/yun-getting-started/01-login.png" /></p>
+<p><img alt="01 Login" src="images/yun-getting-started/01-login.png" /></p>
 <p>4) Type the default password which is "arduino"</p>
 <p>5) The following screen will show you the current network status, telling you if you're connected via wifi or ethernet. </p>
-<p><img alt="02 Welcome" src="static/images/yun-getting-started/02-welcome.png" /></p>
+<p><img alt="02 Welcome" src="images/yun-getting-started/02-welcome.png" /></p>
 <p>6) Now hit the configure button. At this point you will be prompted with a new screen, allowing to configure your password, it should be at least 8 chars long</p>
-<p><img alt="03 Password" src="static/images/yun-getting-started/03-password.png" /></p>
+<p><img alt="03 Password" src="images/yun-getting-started/03-password.png" /></p>
 <p>7) Scroll down, and configure access to you existing wireless network. Choose from the selection your network name, the kind of encryption you are using (most common is WPA) and the password you usually set to access your network.</p>
-<p><img alt="04 Wifi" src="static/images/yun-getting-started/04-wifi.png" /></p>
+<p><img alt="04 Wifi" src="images/yun-getting-started/04-wifi.png" /></p>
 <p>8) On the bottom of the page you are able to set a protection on access to sketches from the REST interface. If you don't know what this means, and in any case, it is safe to set this to "With password". </p>
-<p><img alt="05 Rest" src="static/images/yun-getting-started/05-rest.png" /></p>
+<p><img alt="05 Rest" src="images/yun-getting-started/05-rest.png" /></p>
 <p>9) Hit configure and restart. Now you can switch back to your existing wifi connection. If you did set your config data correctly the Arduino YUN should be again reachable using the http://arduino.local address, asking for the password you did set up at step 6).</p>
-<p><img alt="06 Restart" src="static/images/yun-getting-started/06-restart.png" /></p>
+<p><img alt="06 Restart" src="images/yun-getting-started/06-restart.png" /></p>
 <p>10) Optional - If you plan to access your Arduino YUN using ssh, I recommend to set up private key based login instead of plain old passwords: not only it is more secure (your password might be guessed, but nobody will be able to guess your private key), but more
 practical so you don't have to type the password every time.</p>
 <p>If you want to set it, just hit Configure on the main screen shown after inserting the password, when a new page loads, on the top of the page you will now select "advanced configuration panel", select it and you will be presented with the Administration panel:</p>
 <p>Now select the System menu and the Administration option. You will be presented with a new form, allowing also to change the system password. </p>
-<p><img alt="07 Admin" src="static/images/yun-getting-started/07-admin.png" /></p>
+<p><img alt="07 Admin" src="images/yun-getting-started/07-admin.png" /></p>
 <p>Now scroll down to SSH Keys, and paste in your SSH Certificate, then hit "Save and Apply". If you don't have one you can follow <a href="https://help.github.com/articles/generating-ssh-keys">this tutorial</a> to generate one. At the end you should come up with something like</p>
 <div class="highlight"><pre><span class="n">ssh</span><span class="o">-</span><span class="n">rsa</span> <span class="n">AAAAB3NzaC1yc2EAAAABIwAAAQEAklOUpkDHrfHY17SbrmTIpNLTGK9Tjom</span><span class="o">/</span><span class="n">BWDSU</span>
 <span class="n">GPl</span><span class="o">+</span><span class="n">nafzlHDTYW7hdI4yZ5ew18JH4JW9jbhUFrviQzM7xlELEVf4h9lFX5QVkbPppSwg0cda3</span>
@@ -137,12 +137,12 @@ practical so you don't have to type the password every time.</p>
 
 
 <p>that you can copy and paste in the textarea. </p>
-<p><img alt="08 Ssh" src="static/images/yun-getting-started/08-ssh.png" /></p>
+<p><img alt="08 Ssh" src="images/yun-getting-started/08-ssh.png" /></p>
 <p>Once you are done, and applied the change you can try (depending on your platform) to ssh to the YUN using</p>
 <p><code>ssh root@arduino.local</code></p>
 <p>if the command doesn't ask you for a password, you are set up, and can move on to step 12. If it doesn't check you followed the instruction or ask for help to a friend or in a Linux forum.  </p>
 <p>12) If your passwordless ssh worked you can now disable password-based access to the YUN. Go back to the System &gt; Administration menu item, under the SSH Access header and uncheck the following checkfields</p>
-<p><img alt="09 Ssh2" src="static/images/yun-getting-started/09-ssh2.png" /></p>
+<p><img alt="09 Ssh2" src="images/yun-getting-started/09-ssh2.png" /></p>
 <p>apply your changes, and you are done.</p>
 <p>13) Where to go from here: </p>
 <ul>
@@ -151,7 +151,7 @@ practical so you don't have to type the password every time.</p>
 </ul>
 <p>I hope you found this useful, if so I'll write more tutorials on the features offered by the Administration panel. Have fun with your YUN!</p>
     </div><!-- /.entry-content -->
-        <div class="comments">
+    <div class="comments">
       <h2>Comments !</h2>
       <div id="disqus_thread"></div>
       <script type="text/javascript">
@@ -164,7 +164,7 @@ practical so you don't have to type the password every time.</p>
         })();
       </script>
     </div>
-    
+
   </article>
 </section>
                    
@@ -172,7 +172,7 @@ practical so you don't have to type the password every time.</p>
             </div>
             
             <div class="col-xs-12 col-md-3" style="padding-top: 50px">
-                 
+    
      
         <div id="" class="panel panel-default">
             <div class="panel-body">
@@ -183,50 +183,53 @@ practical so you don't have to type the password every time.</p>
         </div>
      
 
-                                <ul class="list-group">
+                        <ul class="list-group">
                             <li class="list-group-item"><strong>Blogroll</strong></li>
-                                                    <li class="list-group-item"><a href="http://fablabstarter.com/">FabLab Starter</a></li>
-                                                    <li class="list-group-item"><a href="http://www.artigianatodigitale.com">Artigianato Digitale</a></li>
-                                                    <li class="list-group-item"><a href="http://leapleather.com">Leap Leather</a></li>
-                                                    <li class="list-group-item"><a href="http://woodyui.com">Woody UI</a></li>
-                                                </ul>
+                            <li class="list-group-item"><a href="http://fablabstarter.com/">FabLab Starter</a></li>
+                            <li class="list-group-item"><a href="http://www.artigianatodigitale.com">Artigianato Digitale</a></li>
+                            <li class="list-group-item"><a href="http://leapleather.com">Leap Leather</a></li>
+                            <li class="list-group-item"><a href="http://woodyui.com">Woody UI</a></li>
+                        </ul>
 
-        
 
-                        <div class="social">
+
+                <div class="social">
 
                         <ul class="list-group">
                             <li class="list-group-item"><strong>Social</strong></li>
                             <li class="list-group-item"><a href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
-                            
-                                                    <li class="list-group-item"><a href="https://twitter.com/fibasile">Twitter</a></li>
-                                                    <li class="list-group-item"><a href="https://github.com/fibasile">GitHub</a></li>
-                                                    <li class="list-group-item"><a href="http://www.linkedin.com/in/fibasile">LinkedIn</a></li>
-                                                </ul>
+
+                            <li class="list-group-item"><a href="https://twitter.com/fibasile">Twitter</a></li>
+                            <li class="list-group-item"><a href="https://github.com/fibasile">GitHub</a></li>
+                            <li class="list-group-item"><a href="http://www.linkedin.com/in/fibasile">LinkedIn</a></li>
+                        </ul>
                 </div><!-- /.social -->
-                
+        
         
         <div class="tags">
             <ul  class="list-group">
                   <li class="list-group-item"><strong>Tags</strong></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/publishing.html">publishing</a></li>
-                                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/projects.html">projects</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/python.html">python</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/dropbox.html">dropbox</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/objc.html">objc</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/makerfaire.html">makerfaire</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/galileo.html">galileo</a></li>
-                                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/makers.html">makers</a></li>
-                                    <li class="list-group-item tag-0"><a class="btn btn-info" href="/tag/arduino.html">arduino</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ardos.html">ardos</a></li>
-                                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/yun.html">yun</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/firmata.html">firmata</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/angularjs.html">angularjs</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/nodejs.html">nodejs</a></li>
-                                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/opensource.html">opensource</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/pelican.html">pelican</a></li>
-                                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/intel.html">intel</a></li>
-                            </ul>
+                    <li class="list-group-item tag-3"><a class="btn btn-info" href="/tag/yun.html">yun</a></li>
+                    <li class="list-group-item tag-3"><a class="btn btn-info" href="/tag/firmata.html">firmata</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/nodejs.html">nodejs</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/intel.html">intel</a></li>
+                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/arduino.html">arduino</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/galileo.html">galileo</a></li>
+                    <li class="list-group-item tag-3"><a class="btn btn-info" href="/tag/makers.html">makers</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/makerfaire.html">makerfaire</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ble.html">ble</a></li>
+                    <li class="list-group-item tag-3"><a class="btn btn-info" href="/tag/ios.html">ios</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ardos.html">ardos</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/pelican.html">pelican</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/angularjs.html">angularjs</a></li>
+                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/opensource.html">opensource</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/python.html">python</a></li>
+                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/projects.html">projects</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/dropbox.html">dropbox</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/xadow.html">xadow</a></li>
+                    <li class="list-group-item tag-3"><a class="btn btn-info" href="/tag/objc.html">objc</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/publishing.html">publishing</a></li>
+            </ul>
             
             
         </div>
@@ -252,7 +255,7 @@ practical so you don't have to type the password every time.</p>
     <!-- Latest compiled and minified JavaScript -->
        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
        
-           <script type="text/javascript">
+    <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-42131469-5']);
     _gaq.push(['_trackPageview']);

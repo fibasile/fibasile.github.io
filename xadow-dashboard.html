@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>@fibasile - Posts tagged angularjs</title>
+    <title>Xadow Dashboard</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
@@ -65,43 +65,118 @@
 
             <div class="col-xs-12 col-md-9">
                     
-<h3>Posts tagged: <span class="label label-default">angularjs</span></h3><hr/>                   
-        
+                   
 
 
-        
 
-           
-                <article>
-                    <h1 class="entry-title"><a href="http://fibasile.github.io/quickcanvas-webapp.html">QuickCanvas, a lean business canvas web app</a></h1> 
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="http://fibasile.github.io/xadow-dashboard.html" rel="bookmark"
+           title="Permalink to Xadow Dashboard">Xadow Dashboard</a></h1>
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
 <footer class="post-info">
 
-<p>        <abbr class="published" title="2013-09-04T16:20:00">
-                Wed 04 September 2013
+<p>        <abbr class="published" title="2013-11-10T18:12:00">
+                Sun 10 November 2013
         </abbr>
 
         <!--               <address class="vcard author">
                       By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
               </address>
  -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-    <a href="http://fibasile.github.io/tag/projects.html">
-        <span class="label label-default">projects</span>
+| Category: <a href="http://fibasile.github.io/category/projects.html">projects</a> |     <span class="glyphicon glyphicon-tag"></span>
+    <a href="http://fibasile.github.io/tag/objc.html">
+        <span class="label label-default">objc</span>
         </a>
-    <a href="http://fibasile.github.io/tag/opensource.html">
-        <span class="label label-default">opensource</span>
+    <a href="http://fibasile.github.io/tag/firmata.html">
+        <span class="label label-default">firmata</span>
         </a>
-    <a href="http://fibasile.github.io/tag/angularjs.html">
-        <span class="label label-default">angularjs</span>
+    <a href="http://fibasile.github.io/tag/xadow.html">
+        <span class="label label-default">xadow</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/ios.html">
+        <span class="label label-default">ios</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/arduino.html">
+        <span class="label label-default">arduino</span>
         </a>
  </p>
 
 
-</footer><!-- /.post-info --><p>A practical example of AngularJS and JSPDF usage</p><p>There are <a href="http://fibasile.github.io/quickcanvas-webapp.html#disqus_thread">comments</a>.</p>                    <a class="btn btn-success" href="http://fibasile.github.io/quickcanvas-webapp.html">Read more...</a>
-                    
-                </article>
+</footer><!-- /.post-info -->      <h2>Introducing Xadow</h2>
+<p>The Xadow platform from SeeedStudio is a great starting point for any wearable project. Since its release I've been very interested in using it
+because of its form factor (really tiny stuff) and Arduino compatibility.</p>
+<p><img alt="Xadow Dashboard" src="images/xadow-dashboard/xadow.jpg" /></p>
+<p>The Xadow modular design allows to combine several modules with the main Xadow mainboard, including:</p>
+<ul>
+<li>OLED Display</li>
+<li>LED Matrix.</li>
+<li>Accelerometer</li>
+<li>Barometer</li>
+<li>BLE radio</li>
+<li>GPS</li>
+<li>EEPROM memory</li>
+<li>Motor</li>
+<li>NFC</li>
+<li>Groove adapter</li>
+<li>RTC</li>
+</ul>
+<p>This makes the platform really flexible, and open to many usage scenarios.</p>
+<h2>What you can do with it</h2>
+<p>I developed few prototypes with Xadow, for example a small Twitter-enabled smartwatch, shown in the picture below. In this case the Xadow is controlling the display and communicating with an iOS app which is pulling Tweets from a twitter search or a specific account.</p>
+<p><img alt="The Tworologio Smartwatch concept" src="images/xadow-dashboard/tworologio.jpg" /></p>
+<p>Many other makers are working with Xadow to build interesting wearable applications. For some examples check out <a href="http://xadow.cc">http://xadow.cc</a> where my concept is also showcased.</p>
+<h2>Creating Bluetooth smart apps with Xadow</h2>
+<p>Xadow is really useful when developing wearable connected accessories such as Smartwatches, jewels and similar objects. These are usually made by combining an Arduino-compatible app, running on the Xadow itself, possibly accessing data from some of the available sensors and interacting with the user with the display, and a smartphone or tablet app.</p>
+<p>With the advent of Bluetooth Low Energy, in fact, it is finally possible to develop iOS apps that talk to accessories, without getting a license from Apple. Also on Android, many newer phones and tablets got BLE support too.</p>
+<p>When developing such apps, especially when using the Bluetooth Low Energy mode, required for iOS compatibility, you often have to write code which passes commands and data over the Bluetooth link, interprets it and invokes corresponding routines.</p>
+<p>Using the BLE communication, there are few issues to be considered: the most important is that the BLE link is quite fragile, and limited to the exchange of very small bits of information, maximum 20 bytes at a time.</p>
+<p>For this reason it is difficult to use libraries such as the Arduino-provided Commander, because most of them require to send arbitrary length packets.</p>
+<p>The solution is to create a Firmata-like protocol, and add on top of it some buffering in order to be able to manage packages longer than 20 bytes.</p>
+<h2>Xadow Dashboard</h2>
+<p>Xadow Dashboard is built out of two main components:</p>
+<ul>
+<li>
+<p>Xadow Firmata: an adaptation of the Firmata protocol, using mainly the SYSEX instructions to access data from the specific Xadow modules. In particular this is able to access the Battery, Built-in LED, the OLED display and so on.</p>
+</li>
+<li>
+<p>Xadow Firmata ObjC module: this is a small library that allows communicating with the Firmata running on the Xadow, and can be reused in custom applications.</p>
+</li>
+<li>
+<p>Xadow Dashboard iOS app: this is an example of how an iOS app can interact with Xadow, and is meant to contain several examples for usage scenarios, but could also serve as a basis for a specific applicaton.  </p>
+</li>
+</ul>
+<p>The Xadow Firmata provided with the current version of Xadow Dashboard supports just Display, Accelerometer, BLE and RTC but other modules will also be supported as soon as I get access to them.</p>
+<h2>Screenshots</h2>
+<p>The following few screens showcase the current implemented functionality:</p>
+<p><img alt="Xadow Dashboard" src="images/xadow-dashboard/dashboard1.jpg" />
+<img alt="Xadow Dashboard" src="images/xadow-dashboard/dashboard2.jpg" />
+<img alt="Xadow Dashboard" src="images/xadow-dashboard/dashboard3.jpg" /></p>
+<h2>Source code</h2>
+<p>You can download the Xadow Dashboard project from my github account:</p>
+<p><a href="https://github.com/fibasile/XadowApps">https://github.com/fibasile/XadowApps</a></p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_identifier = "xadow-dashboard.html";
+        var disqus_url = "http://fibasile.github.io/xadow-dashboard.html";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://fibasile.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    </div>
 
-                <hr/>
+  </article>
+</section>
                    
         
             </div>
