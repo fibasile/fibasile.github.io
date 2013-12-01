@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>A short Maker Faire Europe Recap</title>
+    <title>Send accelerometer data via BLE to OSC Server</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
@@ -73,62 +73,77 @@
   <article>
     <header>
       <h1 class="entry-title">
-        <a href="http://fibasile.github.io/short-maker-faire-recap.html" rel="bookmark"
-           title="Permalink to A short Maker Faire Europe Recap">A short Maker Faire Europe Recap</a></h1>
+        <a href="http://fibasile.github.io/ble-to-osc.html" rel="bookmark"
+           title="Permalink to Send accelerometer data via BLE to OSC Server">Send accelerometer data via BLE to OSC Server</a></h1>
 <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
     </header>
 
     <div class="entry-content">
 <footer class="post-info">
 
-<p>        <abbr class="published" title="2013-10-07T12:36:00">
-                Mon 07 October 2013
+<p>        <abbr class="published" title="2013-12-01T18:12:00">
+                Sun 01 December 2013
         </abbr>
 
         <!--               <address class="vcard author">
                       By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
               </address>
  -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-    <a href="http://fibasile.github.io/tag/makers.html">
-        <span class="label label-default">makers</span>
+| Category: <a href="http://fibasile.github.io/category/projects.html">projects</a> |     <span class="glyphicon glyphicon-tag"></span>
+    <a href="http://fibasile.github.io/tag/objc.html">
+        <span class="label label-default">objc</span>
         </a>
-    <a href="http://fibasile.github.io/tag/makerfaire.html">
-        <span class="label label-default">makerfaire</span>
+    <a href="http://fibasile.github.io/tag/firmata.html">
+        <span class="label label-default">firmata</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/flora.html">
+        <span class="label label-default">flora</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/mac.html">
+        <span class="label label-default">mac</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/arduino.html">
+        <span class="label label-default">arduino</span>
         </a>
  </p>
 
 
-</footer><!-- /.post-info -->      <p>While my memories are still fresh I think it could be interesting to describe what happend at the European Maker Faire from my point of view.</p>
-<p>It was a huge success with tens of thousands of visitors and thousands of makers from around the world.</p>
-<p>I'm not "new" to technology events and I had already seen most of the 3d printers and stuff presented during the event on blogs and so on. So this report won't talk about how impressed I was about seeing 3d printers everywhere, robots, wearable, electronics etc.</p>
-<p>The first thing that really pleased me was how easy it was to talk to the people. Makers, entrepreneurs, geeks at large, everybody was keen to learn and discover new projects and meet others. I got in contact with very talented people and promising companies, I will keep in touch with them hoping to do new projects with collaborations all over the world.  </p>
-<p>I also met lots of "stars" in the maker world and even outside. I chatted with them, they where happy to answer any kind of question, helping anybody needed some information or hint, or even joking around. This is a great value of joining a Maker Faire and I suggest anybody to go visit one if they can.</p>
-<p>Among them I must cite Massimo Banzi, Alessandro Ranellucci, Josef Prusa, David Cuartielles, Bruce Sterling and thank them for making every of the last four days memorable.</p>
-<p>There also were what I consider three big announcements:</p>
+</footer><!-- /.post-info -->      <p>I built this sample Mac app to report accelerometer data acquired from Adafruit Flora, sent using BLE to the Mac and then converted in OSC format, for example to be forwarded to Osculator or similar apps.</p>
+<h2>Source code</h2>
+<p>You can find the source code at the following repository:</p>
+<p><a href="https://github.com/fibasile/BLE_to_OSC">https://github.com/fibasile/BLE_to_OSC</a></p>
+<h2>Required hardware</h2>
+<p>The demo app was tested with the following:</p>
 <ul>
-<li>
-<p>Intel joining the maker world with an Arduino-approved board, called Galileo. Like all the other makers attending the announcement, I got a sample board, and will try to write something about its inner working in the next few days.</p>
-</li>
-<li>
-<p>Arduino TRE, a new powerful ARM-based board made by Texas Instruments. Unfortunately available only in Spring, but very promising, not only for the fact it is the first Arduino platform supporting audio.</p>
-</li>
-<li>
-<p>A new model for the Arduino Community, with a deeper involvement of makers into new products development, including the possibility to earn money from it, which I consider very useful to reduce the fragmentation and speed up the community projects.</p>
-</li>
+<li>Adafruit Flora</li>
+<li>Adafruit LSM303 Accelerometer </li>
+<li>RedBear Lab BLE Mini</li>
 </ul>
-<p>All of these imply the maker movement is making huge steps forward towards the "mainstream" market, with big corporation trying to get into it in different ways.</p>
-<p>I suspect more will join the train, and I'm very excited about that.</p>
-<p>On my side I'll try very hard to follow and develop new exciting stuff with the new boards, not forgetting the Yun for which I'm going to release a project I'm working on since its launch, and which I think could be a very useful contribution.</p>
-<p>On the business side, I received a very good feedback for my <a href="http://leapleather.com">Leap Leather Case</a> at Maketank.it stand and for the <a href="http://www.artigianatodigitale.com/progetti/tworologio/">Tworologio concept</a> of a twitter connected arduino based smartwatch.</p>
-<p>Finally I had the opportunity to present my <a href="http://woodyui.com">Woody UI Kit</a> in a room full of people, and answer interesting questions. I hope the project will have a good following, and more than 800 visits in one day to the Instructable I published could be a first proof of that.</p>
+<p>Connect the LSM303 accelerometer to Flora SDL and SCL, 3.3v and GND pins.</p>
+<p>Connect the BLE mini TX to Flora RX and RX to Flora TX, 3.3v and GND pins.  </p>
+<p>Add a Lipo battery or plug in the USB cable to the Flora.</p>
+<h2>Required software</h2>
+<p>Make sure you checkout the repository using the recursive option, so you also get the submodules containing all the required dependencies into the deps folder.</p>
+<h2>Instructions</h2>
+<p>Make sure you have installed the Adafruit_LSM303 library in your Arduino Library folder.</p>
+<p>Open the Adafruit Arduino IDE version, and load the FloraAccel.ino sketch you find in the folder.</p>
+<p>This sketch uses the Firmata protocol, sending SYSEX messages containing the readings from the accelerometer. The only thing which is custom is that since accelerometer produces signed integers, those are sent as two bytes instead of one per axis.</p>
+<p>Now compile the Mac project BleToOSC using XCode and run it.</p>
+<h2>Screenshots</h2>
+<p><img alt="BLE Sensor" src="images/ble-to-osc/bleosc1.png" />
+<img alt="OSC Server" src="images/ble-to-osc/bleosc2.png" /></p>
+<p>You can configure:</p>
+<ul>
+<li>In the BLE Sensor tab: the kind of bluetooth low energy modem, currently only Ble Mini is supported, but a Xadow version will be added soon. </li>
+<li>In the OSC Server tab: the OSC server host and port number, and also the path that will show up in OSC server. The example uses a naming similar to what you might use for a Nintendo Wii Nunchuck controller.</li>
+</ul>
     </div><!-- /.entry-content -->
     <div class="comments">
       <h2>Comments !</h2>
       <div id="disqus_thread"></div>
       <script type="text/javascript">
-        var disqus_identifier = "short-maker-faire-recap.html";
-        var disqus_url = "http://fibasile.github.io/short-maker-faire-recap.html";
+        var disqus_identifier = "ble-to-osc.html";
+        var disqus_url = "http://fibasile.github.io/ble-to-osc.html";
         (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
         dsq.src = 'http://fibasile.disqus.com/embed.js';
