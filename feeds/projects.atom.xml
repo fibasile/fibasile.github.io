@@ -7,7 +7,7 @@
 &lt;p&gt;Aside from a working latest version of the Arduino IDE, you will also need a suitable USB Bluetooth Low Energy
 dongle. &lt;/p&gt;
 &lt;p&gt;When I started playing with iBeacons I got a dongle marked C.S.R. and ordered from Amazon for around 11 Euros., I didn't manage to have it working. 
-I don't know if this was due to the fact it uses a BroadCom chip, or I was using an older version of the bluez stack.
+I don't know if this was due to the fact I was using an older version of the bluez stack.
 In the meanwhile I lost it: I cannot recommend it, but maybe it works with the instructions provided here.&lt;/p&gt;
 &lt;p&gt;Next one i tried is the IOGEAR Bluetooth 4.0 USB Micro Adapter (mod. GBU521) got from Ebay for 20 Euro which I can recommend as working.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Configuring iBeacon from the command line&lt;/strong&gt;&lt;/p&gt;
@@ -18,7 +18,7 @@ First we check if the device is recognized at the USB port:&lt;/p&gt;
 
 
 &lt;p&gt;The device shows up as:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;Bus&lt;/span&gt; &lt;span class="mo"&gt;001&lt;/span&gt; &lt;span class="n"&gt;Device&lt;/span&gt; &lt;span class="mo"&gt;005&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;ID&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;a12&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mo"&gt;0001&lt;/span&gt; &lt;span class="n"&gt;Cambridge&lt;/span&gt; &lt;span class="n"&gt;Silicon&lt;/span&gt; &lt;span class="n"&gt;Radio&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Ltd&lt;/span&gt; &lt;span class="n"&gt;Bluetooth&lt;/span&gt; &lt;span class="n"&gt;Dongle&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;HCI&lt;/span&gt; &lt;span class="n"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;Bus&lt;/span&gt; &lt;span class="mo"&gt;001&lt;/span&gt; &lt;span class="n"&gt;Device&lt;/span&gt; &lt;span class="mo"&gt;003&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;ID&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="n"&gt;a5c&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;21e8&lt;/span&gt; &lt;span class="n"&gt;Broadcom&lt;/span&gt; &lt;span class="n"&gt;Corp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
