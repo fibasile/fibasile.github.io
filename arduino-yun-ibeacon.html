@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>Turn your Arduino YUN into an iBeacon transmitter</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+
+    <!-- Optional theme -->
+    <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css"/> -->
+    
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/flatly.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/mediaicons.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/pygment.css"/>
+    <link rel="stylesheet" href="http://fibasile.github.io/theme/css/typogrify.css"/>
+    <style type="text/css" media="screen">
+	.err {
+		/** remove irritating red border from pygment code **/
+		border: none;
+	}
+    </style>
+    
+    <link href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="@fibasile Atom Feed" />
+
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+   
+  </head>
+
+  <body>
+    <div class="container">
+        
+         <div class="row" >
+
+                <div class="col-xs-12 col-md-12">
+                     <div class="navbar navbar-inverse" role="navigation">
+                         <div class="container">
+                         <div class="navbard-header">
+                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                                         <span class="sr-only">Toggle navigation</span>
+                                         <span class="icon-bar"></span>
+                                         <span class="icon-bar"></span>
+                                         <span class="icon-bar"></span>
+                                       </button>
+                                  <a class="navbar-brand" href="http://fibasile.github.io/">@fibasile </a>
+                         </div>
+                           <div class="collapse navbar-collapse navbar-ex1-collapse">
+                              <ul class="nav navbar-nav">
+                                        <li><a href="http://fibasile.github.io/pages/about.html">About me</a></li>
+                                        <li><a href="http://fibasile.github.io/pages/projects.html">Projects</a></li>
+                                </ul>
+                            </div>
+                            </div>
+                        </div>
+                </div>
+        </div>
+
+        <div class="row" >
+
+            <div class="col-xs-12 col-md-9">
+                    
+                   
+
+
+
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="http://fibasile.github.io/arduino-yun-ibeacon.html" rel="bookmark"
+           title="Permalink to Turn your Arduino YUN into an iBeacon transmitter">Turn your Arduino YUN into an iBeacon transmitter</a></h1>
+<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+
+<p>        <abbr class="published" title="2014-01-12T18:12:00">
+                Sun 12 January 2014
+        </abbr>
+
+        <!--               <address class="vcard author">
+                      By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
+              </address>
+ -->
+| Category: <a href="http://fibasile.github.io/category/projects.html">projects</a> |     <span class="glyphicon glyphicon-tag"></span>
+    <a href="http://fibasile.github.io/tag/ibeacon.html">
+        <span class="label label-default">ibeacon</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/arduino.html">
+        <span class="label label-default">arduino</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/yun.html">
+        <span class="label label-default">yun</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/.html">
+        <span class="label label-default"></span>
+        </a>
+ </p>
+
+
+</footer><!-- /.post-info -->      <p>In this post I'll show you how to turn the Arduino YUN into an iBeacon transmitter.</p>
+<p>For those who didn't hear about iBeacon yet, I can say it's a new technology built into the latest version of iOS, which allows proximity tracking using Bluetooth Low Energy. </p>
+<p>iBeacon-enabled apps can provide the user for example location-related content in indoor settings. It is also possible to establish an approximation of distance to the iBeacon thus allowing to build precise context aware apps.</p>
+<p>Using Arduino YUN also as an iBeacon allows to pack into the same low-device both a transmitter, a webserver and a smart device. Cool uh? </p>
+<p><strong>What you need to get started</strong></p>
+<p>Aside from a working latest version of the Arduino IDE, you will also need a suitable USB Bluetooth Low Energy
+dongle. </p>
+<p>When I started playing with iBeacons I got a dongle marked C.S.R. and ordered from Amazon for around 11 Euros., I didn't manage to have it working. 
+I don't know if this was due to the fact it uses a BroadCom chip, or I was using an older version of the bluez stack.
+In the meanwhile I lost it: I cannot recommend it, but maybe it works with the instructions provided here.</p>
+<p>Next one i tried is the IOGEAR Bluetooth 4.0 USB Micro Adapter (mod. GBU521) got from Ebay for 20 Euro which I can recommend as working.</p>
+<p><strong>Configuring iBeacon from the command line</strong></p>
+<p>In this section I will explain the single steps that you can execute using the ssh connection of the YUN. 
+First we check if the device is recognized at the USB port:</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">lsusb</span>
+</pre></div>
+
+
+<p>The device shows up as:</p>
+<div class="highlight"><pre><span class="n">Bus</span> <span class="mo">001</span> <span class="n">Device</span> <span class="mo">005</span><span class="o">:</span> <span class="n">ID</span> <span class="mi">0</span><span class="n">a12</span><span class="o">:</span><span class="mo">0001</span> <span class="n">Cambridge</span> <span class="n">Silicon</span> <span class="n">Radio</span><span class="p">,</span> <span class="n">Ltd</span> <span class="n">Bluetooth</span> <span class="n">Dongle</span> <span class="p">(</span><span class="n">HCI</span> <span class="n">mode</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Now we need to setup the Bluetooth modules</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">opkg</span> <span class="n">update</span>
+<span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">opkg</span> <span class="n">install</span> <span class="n">kmod</span><span class="o">-</span><span class="n">bluetooth</span>
+</pre></div>
+
+
+<p>The standard Linino distribution for bluez is outdated, you should get <a href="images/arduino-yun-ibeacon/bluez_5.13-1_ar71xx.ipk">this package</a> built for the new Bluez 5.13 version which supports ble, copy it over the Yun and run</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">opkg</span> <span class="n">install</span> <span class="n">bluez_5</span><span class="mf">.13</span><span class="o">-</span><span class="mi">1</span><span class="n">_ar71xx</span><span class="p">.</span><span class="n">ipk</span>
+</pre></div>
+
+
+<p>Once you installed these you can query if the bluetooth stack found your device using the hciconfig program:</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">hciconfig</span> 
+<span class="nl">hci0:</span>   <span class="n">Type</span><span class="o">:</span> <span class="n">USB</span>
+    <span class="n">BD</span> <span class="n">Address</span><span class="o">:</span> <span class="mo">00</span><span class="o">:</span><span class="mi">15</span><span class="o">:</span><span class="mi">83</span><span class="o">:</span><span class="mi">64</span><span class="o">:</span><span class="n">CB</span><span class="o">:</span><span class="n">C4</span> <span class="n">ACL</span> <span class="n">MTU</span><span class="o">:</span> <span class="mi">310</span><span class="o">:</span><span class="mi">10</span> <span class="n">SCO</span> <span class="n">MTU</span><span class="o">:</span> <span class="mi">64</span><span class="o">:</span><span class="mi">8</span>
+    <span class="n">DOWN</span> 
+    <span class="n">RX</span> <span class="n">bytes</span><span class="o">:</span><span class="mi">501</span> <span class="n">acl</span><span class="o">:</span><span class="mi">0</span> <span class="n">sco</span><span class="o">:</span><span class="mi">0</span> <span class="n">events</span><span class="o">:</span><span class="mi">23</span> <span class="n">errors</span><span class="o">:</span><span class="mi">0</span>
+    <span class="n">TX</span> <span class="n">bytes</span><span class="o">:</span><span class="mi">369</span> <span class="n">acl</span><span class="o">:</span><span class="mi">0</span> <span class="n">sco</span><span class="o">:</span><span class="mi">0</span> <span class="n">commands</span><span class="o">:</span><span class="mi">22</span> <span class="n">errors</span><span class="o">:</span><span class="mi">0</span>
+</pre></div>
+
+
+<p>If you get similar output we are on the right way. Let's turn on the hci0 interface:</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">hciconfig</span> <span class="n">hci0</span> <span class="n">up</span>
+<span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">hciconfig</span>
+<span class="nl">hci0:</span>   <span class="n">Type</span><span class="o">:</span> <span class="n">USB</span>
+    <span class="n">BD</span> <span class="n">Address</span><span class="o">:</span> <span class="mo">00</span><span class="o">:</span><span class="mi">15</span><span class="o">:</span><span class="mi">83</span><span class="o">:</span><span class="mi">64</span><span class="o">:</span><span class="n">CB</span><span class="o">:</span><span class="n">C4</span> <span class="n">ACL</span> <span class="n">MTU</span><span class="o">:</span> <span class="mi">310</span><span class="o">:</span><span class="mi">10</span> <span class="n">SCO</span> <span class="n">MTU</span><span class="o">:</span> <span class="mi">64</span><span class="o">:</span><span class="mi">8</span>
+    <span class="n">UP</span> <span class="n">RUNNING</span> 
+    <span class="n">RX</span> <span class="n">bytes</span><span class="o">:</span><span class="mi">996</span> <span class="n">acl</span><span class="o">:</span><span class="mi">0</span> <span class="n">sco</span><span class="o">:</span><span class="mi">0</span> <span class="n">events</span><span class="o">:</span><span class="mi">45</span> <span class="n">errors</span><span class="o">:</span><span class="mi">0</span>
+    <span class="n">TX</span> <span class="n">bytes</span><span class="o">:</span><span class="mi">738</span> <span class="n">acl</span><span class="o">:</span><span class="mi">0</span> <span class="n">sco</span><span class="o">:</span><span class="mi">0</span> <span class="n">commands</span><span class="o">:</span><span class="mi">44</span> <span class="n">errors</span><span class="o">:</span><span class="mi">0</span>
+</pre></div>
+
+
+<p>With the interface up and running we can setup the iBeacon params.</p>
+<p>iBeacons transmit three main parameters, which allow a single iBeacon to be identified by the iOS devices looking for them. These parameters are:</p>
+<ul>
+<li>UUID: a unique identifier shared by all iBeacons handled by a given iOS application. For example this would be the same for all stores of a given company, or all museums in a region.</li>
+<li>major: this single integer number, is meant to identify iBeacons for a given general location, i.e. a specific museum or shop</li>
+<li>minor: another single integer number, which can be used to define the identity of a specific place within a location. i.e. an iBeacon for a specific piece of art within a museum, or a specific stand within a supermarket.</li>
+</ul>
+<p>In order to setup our dongle to advertise using Bluetooth LE we must dig a bit into the Bluetooth specification. What we basically do is to send an <a href="https://developer.bluetooth.org/TechnologyOverview/Pages/HCI.aspx">Host-Controller-Interface</a> command to the dongle telling to start advertising with
+sending out a specific data block.</p>
+<p>It <a href="http://stackoverflow.com/questions/16151360/use-bluez-stack-as-a-peripheral-advertiser">turns out</a> that the magic command to do this is:</p>
+<div class="highlight"><pre><span class="nb">root</span><span class="p">@</span><span class="nx">Arduino</span><span class="p">:</span><span class="err">~#</span> <span class="nx">hcitool</span> <span class="na">-i</span> <span class="nx">hci0</span> <span class="nx">cmd</span> <span class="mh">0x08</span> <span class="mh">0x0008</span> <span class="mi">1</span><span class="nx">E</span> <span class="mi">02</span> <span class="mi">01</span> <span class="mi">1</span><span class="nx">A</span> <span class="mi">1</span><span class="nx">A</span> <span class="nx">FF</span> <span class="mi">4</span><span class="nx">C</span> <span class="mi">00</span> <span class="mi">02</span> <span class="mi">15</span> <span class="o">&lt;</span><span class="nx">UUID</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">MAJOR</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">MINOR</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nx">POWER</span><span class="o">&gt;</span> <span class="mi">00</span>
+</pre></div>
+
+
+<p><em>Update 2014/01/12</em>  <br />
+<a href="http://learn.adafruit.com/pibeacon-ibeacon-with-a-raspberry-pi/what-is-ibeacon">This tutorial</a> from Adafruit takes at least part of the magic out of this synthax. What we are doing is setting up a <code>Manufacturer Specific data</code> field on the Bluetooth advertising data:</p>
+<ul>
+<li>0xFF marks the beginning of the manufacturing specific data bloc</li>
+<li>0x4C 0x00 is Apple manufacturer code</li>
+<li>0x02 is the data type</li>
+<li>0x15 is the length of the remaining data </li>
+</ul>
+<p>So we just need to generate a uuid and we are set, for this we can install the uuidgen package:</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">opkg</span> <span class="n">install</span> <span class="n">uuidgen</span>
+<span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">uuidgen</span> 
+<span class="n">d28c3c18</span><span class="o">-</span><span class="mi">945</span><span class="n">a</span><span class="o">-</span><span class="mi">49</span><span class="n">b5</span><span class="o">-</span><span class="mf">809f</span><span class="o">-</span><span class="n">d5c09ba095e6</span>
+</pre></div>
+
+
+<p>We can now take this UUID and start advertising with the generated UUID, major 0 and minor 0, please not you need to rewrite the UUID in pairs of 2 bytes:</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">hciconfig</span> <span class="n">hci0</span> <span class="n">noleadv</span>
+<span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">hcitool</span> <span class="o">-</span><span class="n">i</span> <span class="n">hci0</span> <span class="n">cmd</span> <span class="mh">0x08</span> <span class="mh">0x0008</span> <span class="mi">1</span><span class="n">E</span> <span class="mo">02</span> <span class="mo">01</span> <span class="mi">1</span><span class="n">A</span> <span class="mi">1</span><span class="n">A</span> <span class="n">FF</span> <span class="mi">4</span><span class="n">C</span> <span class="mo">00</span> <span class="mo">02</span> <span class="mi">15</span> <span class="n">D2</span> <span class="mi">8</span><span class="n">C</span> <span class="mi">3</span><span class="n">C</span> <span class="mi">18</span> <span class="mi">94</span> <span class="mi">5</span><span class="n">A</span> <span class="mi">49</span> <span class="n">B5</span> <span class="mi">80</span> <span class="mf">9F</span> <span class="n">D5</span> <span class="n">C0</span> <span class="mi">9</span><span class="n">B</span> <span class="n">A0</span> <span class="mi">95</span> <span class="n">E6</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="n">C9</span> <span class="mo">00</span>
+<span class="o">&lt;</span> <span class="n">HCI</span> <span class="n">Command</span><span class="o">:</span> <span class="n">ogf</span> <span class="mh">0x08</span><span class="p">,</span> <span class="n">ocf</span> <span class="mh">0x0008</span><span class="p">,</span> <span class="n">plen</span> <span class="mi">32</span>
+  <span class="mi">1</span><span class="n">E</span> <span class="mo">02</span> <span class="mo">01</span> <span class="mi">1</span><span class="n">A</span> <span class="mi">1</span><span class="n">A</span> <span class="n">FF</span> <span class="mi">4</span><span class="n">C</span> <span class="mo">00</span> <span class="mo">02</span> <span class="mi">15</span> <span class="n">D2</span> <span class="mi">8</span><span class="n">C</span> <span class="mi">3</span><span class="n">C</span> <span class="mi">18</span> <span class="mi">94</span> <span class="mi">5</span><span class="n">A</span> <span class="mi">49</span> <span class="n">B5</span> <span class="mi">80</span> <span class="mf">9F</span> 
+  <span class="n">D5</span> <span class="n">C0</span> <span class="mi">9</span><span class="n">B</span> <span class="n">A0</span> <span class="mi">95</span> <span class="n">E6</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="mo">00</span> <span class="n">C9</span> <span class="mo">00</span> 
+<span class="o">&gt;</span> <span class="n">HCI</span> <span class="n">Event</span><span class="o">:</span> <span class="mh">0x0e</span> <span class="n">plen</span> <span class="mi">4</span>
+  <span class="mo">01</span> <span class="mi">08</span> <span class="mi">20</span> <span class="mo">00</span>
+</pre></div>
+
+
+<p>Turn on advertising</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">hciconfig</span> <span class="n">hci0</span> <span class="n">leadv</span>
+</pre></div>
+
+
+<p>The board is still scanning for other peripherals, so in order to avoid conflicts it's also necessary to turn it off.</p>
+<div class="highlight"><pre><span class="n">root</span><span class="err">@</span><span class="n">Arduino</span><span class="o">:~</span><span class="err">#</span> <span class="n">hciconfig</span> <span class="n">hci0</span> <span class="n">noscan</span>
+</pre></div>
+
+
+<p><strong>Testing on iOS</strong></p>
+<p>If you have an iOS device (&gt; iphone 4s, &gt;iPad retina and mini), and a developer account, you can test iBeacon discovery with the following Receiver project you can find at:</p>
+<div class="highlight"><pre><span class="nl">https:</span><span class="c1">//github.com/Estimote/beacons-demo</span>
+</pre></div>
+
+
+<p>Please make sure you change the UUID to the one used in the example, in our case <code>D28C3C18-945A-49B5-809F-D5C09BA095E6</code>.</p>
+<p><strong>Testing on Android</strong></p>
+<p>Not many know that even if iBeacon is an Apple technology, it's fully compatible with the BLE spec. So many of the Android phones and tables supporting BLE can locate and range iBeacons too. There are several iBeacon apps for supported Android devices, like <a href="https://play.google.com/store/apps/details?id=com.radiusnetworks.ibeaconlocate&amp;hl=en">AirLocate</a>. </p>
+<p>Please let me know if all works, especially with other dongle models.</p>
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_identifier = "arduino-yun-ibeacon.html";
+        var disqus_url = "http://fibasile.github.io/arduino-yun-ibeacon.html";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://fibasile.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    </div>
+
+  </article>
+</section>
+                   
+        
+            </div>
+            
+            <div class="col-xs-12 col-md-3" style="padding-top: 50px">
+    
+     
+        <div id="" class="panel panel-default">
+            <div class="panel-body">
+            <strong>Fiore Basile</strong>
+            <p><small>programmer, creative, entrepreneur based in Pisa, Italy
+            <a href="/pages/about.html">More...</a></small></p>
+            </div>
+        </div>
+     
+
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Blogroll</strong></li>
+                            <li class="list-group-item"><a href="http://www.artigianatodigitale.com">Artigianato Digitale</a></li>
+                            <li class="list-group-item"><a href="http://fablabcascina.org">Fab Lab Cascina</a></li>
+                            <li class="list-group-item"><a href="http://wearable-os.com">Wearable OS</a></li>
+                            <li class="list-group-item"><a href="http://fablabstarter.com/">FabLab Starter</a></li>
+                            <li class="list-group-item"><a href="http://leapleather.com">Leap Leather</a></li>
+                            <li class="list-group-item"><a href="http://woodyui.com">Woody UI</a></li>
+                        </ul>
+
+
+
+                <div class="social">
+
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Social</strong></li>
+                            <li class="list-group-item"><a href="http://fibasile.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li class="list-group-item"><a href="https://twitter.com/fibasile">Twitter</a></li>
+                            <li class="list-group-item"><a href="https://github.com/fibasile">GitHub</a></li>
+                            <li class="list-group-item"><a href="http://www.linkedin.com/in/fibasile">LinkedIn</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        
+        
+        <div class="tags">
+            <ul  class="list-group">
+                  <li class="list-group-item"><strong>Tags</strong></li>
+                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/objc.html">objc</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/python.html">python</a></li>
+                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/opensource.html">opensource</a></li>
+                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/firmata.html">firmata</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/intel.html">intel</a></li>
+                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/projects.html">projects</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ardos.html">ardos</a></li>
+                    <li class="list-group-item tag-2"><a class="btn btn-info" href="/tag/yun.html">yun</a></li>
+                    <li class="list-group-item tag-3"><a class="btn btn-info" href="/tag/makers.html">makers</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/modules.html">modules</a></li>
+                    <li class="list-group-item tag-3"><a class="btn btn-info" href="/tag/ios.html">ios</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/angularjs.html">angularjs</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/publishing.html">publishing</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/xadow.html">xadow</a></li>
+                    <li class="list-group-item tag-3"><a class="btn btn-info" href="/tag/nodejs.html">nodejs</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/dropbox.html">dropbox</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/flora.html">flora</a></li>
+                    <li class="list-group-item tag-1"><a class="btn btn-info" href="/tag/arduino.html">arduino</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/mac.html">mac</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/makerfaire.html">makerfaire</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/.html"></a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ibeacon.html">ibeacon</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/ble.html">ble</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/galileo.html">galileo</a></li>
+                    <li class="list-group-item tag-4"><a class="btn btn-info" href="/tag/pelican.html">pelican</a></li>
+            </ul>
+            
+            
+        </div>
+            </div>
+        </div>
+        
+        <footer class="navbar navbar-default  navbar-bottom">
+            <div class="container">
+                <div class="navbar-text"><small>
+            &copy; 2013 Fiore Basile - Powered by <a href="http://getpelican.com" class="navbar-link">Pelican</a> - Custom theme built in <a href="http://getbootstrap.com" class="navbar-link">Bootstrap</a></small>
+            </div>
+            </div>
+        </footer>
+        
+        
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+     <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+       <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+       
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-42131469-5']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+  </body>
+</html>
