@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <title>Dropbox and Python Virtualenv</title>
+    <title>@fibasile - Posts tagged hs-311</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
@@ -65,73 +65,43 @@
 
             <div class="col-xs-12 col-md-9">
                     
-                   
+<h3>Posts tagged: <span class="label label-default">hs-311</span></h3><hr/>                   
+        
 
 
+        
 
-<section id="content" class="body">
-  <article>
-    <header>
-      <h1 class="entry-title">
-        <a href="http://fibasile.github.io/dropbox-virtualenv.html" rel="bookmark"
-           title="Permalink to Dropbox and Python Virtualenv">Dropbox and Python Virtualenv</a></h1>
-<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="fibasile">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-    </header>
-
-    <div class="entry-content">
+           
+                <article>
+                    <h1 class="entry-title"><a href="http://fibasile.github.io/hs311-openscad.html">OpenSCAD HS-311 Servo motor model</a></h1> 
 <footer class="post-info">
 
-<p>        <abbr class="published" title="2013-08-29T15:26:00">
-                Thu 29 August 2013
+<p>        <abbr class="published" title="2014-02-20T18:12:00">
+                Thu 20 February 2014
         </abbr>
 
         <!--               <address class="vcard author">
                       By <a class="url fn" href="http://fibasile.github.io/author/fiore-basile.html">Fiore Basile</a>
               </address>
  -->
-| Category: <a href="http://fibasile.github.io/category/blog.html">Blog</a> |     <span class="glyphicon glyphicon-tag"></span>
-    <a href="http://fibasile.github.io/tag/python.html">
-        <span class="label label-default">python</span>
+| Category: <a href="http://fibasile.github.io/category/projects.html">projects</a> |     <span class="glyphicon glyphicon-tag"></span>
+    <a href="http://fibasile.github.io/tag/openscad.html">
+        <span class="label label-default">openscad</span>
         </a>
-    <a href="http://fibasile.github.io/tag/dropbox.html">
-        <span class="label label-default">dropbox</span>
+    <a href="http://fibasile.github.io/tag/servo.html">
+        <span class="label label-default">servo</span>
+        </a>
+    <a href="http://fibasile.github.io/tag/hs-311.html">
+        <span class="label label-default">hs-311</span>
         </a>
  </p>
 
 
-</footer><!-- /.post-info -->      <p>Since most of my systems are 64 bits macs, and I was using Python's excellent virtualenv system, I though it was possibly to just copy over the virtualenvs inside my project folders. </p>
-<p>Fact is that after a while, Dropbox will get stuck in changing some system's file permission, and it wont' sync anymore. As I found out, the only solution is to move your virtual envs out of the Dropbox folder.
-I hope to save you some time with this tip.</p>
-<p>If you don't know it, Virtualenv basically links your system's python library and interpreter in a folder you specify, letting you use pip to install locally any module you need without polluting the system's paths.</p>
-<p>But Dropbox doesn't like those symlinks, especially when they link system folders. </p>
-<p>Quick fix: If you use virtualenv you should create your envs in a folder not synched by dropbox, i.e. something like ~/.virtualenvs/ i.e.</p>
-<div class="highlight"><pre><span class="n">virtualenv</span> <span class="o">~/</span><span class="p">.</span><span class="n">virtualenvs</span><span class="o">/</span><span class="n">myproject</span>
-</pre></div>
+</footer><!-- /.post-info --><p>An OpenSCAD module for the popular HS-311 servo motor</p><p>There are <a href="http://fibasile.github.io/hs311-openscad.html#disqus_thread">comments</a>.</p>                    <a class="btn btn-success" href="http://fibasile.github.io/hs311-openscad.html">Read more...</a>
+                    
+                </article>
 
-
-<p>When you are done installing all the modules using pip you can generate a <code>requirements.txt</code> file using</p>
-<div class="highlight"><pre><span class="n">pip</span> <span class="n">freeze</span> <span class="o">&gt;</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
-</pre></div>
-
-
-<p>Then when you are on another machine re-create the virtualenv using the first command and reinstall every module using <code>pip install -r requirements.txt</code>. Remember to activate your newly created virtualenv first.</p>
-    </div><!-- /.entry-content -->
-    <div class="comments">
-      <h2>Comments !</h2>
-      <div id="disqus_thread"></div>
-      <script type="text/javascript">
-        var disqus_identifier = "dropbox-virtualenv.html";
-        var disqus_url = "http://fibasile.github.io/dropbox-virtualenv.html";
-        (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://fibasile.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-      </script>
-    </div>
-
-  </article>
-</section>
+                <hr/>
                    
         
             </div>
